@@ -1,0 +1,7 @@
+{
+  "name": "safety_sphere",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

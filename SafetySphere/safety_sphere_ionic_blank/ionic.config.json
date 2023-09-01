@@ -1,0 +1,7 @@
+{
+  "name": "safety_sphere_ionic_blank",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

@@ -1,0 +1,111 @@
+<ion-app>
+
+  <nz-layout class="layout">
+    <nz-sider
+      nzCollapsible nzBreakpoint="lg"
+      [nzCollapsedWidth]="0"
+      [nzTrigger]="null"
+      [(nzCollapsed)]="isCollapsed"
+      [nzWidth]="'100%'"
+    >
+    <!-- <nz-sider class="menu-sidebar"
+      nzCollapsible
+      nzWidth="256px"
+      nzBreakpoint="md"
+      [(nzCollapsed)]="isCollapsed"
+      [nzTrigger]="null"
+    > -->
+
+      <div class="sidebar-logo" style="display: flex; justify-content: space-between;">
+        <div style="width: 80%; display: flex;">
+          <div style="width: 10vw;">
+            <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo">
+          </div>
+          <h1>SafetySphere</h1>
+        </div>
+
+        <div>
+          <button nz-button nzType="text" nzShape="circle" nzSize="large">
+            <span nz-icon nzType="close-circle" nzTheme="fill" style="color: white; font-size: 6vw;"></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- <ul nz-menu nzTheme="dark" nzMode="inline">
+        <li nz-menu-item>
+          <span nz-icon nzType="user"></span>
+          <span>nav 1</span>
+        </li>
+        <li nz-menu-item>
+          <span nz-icon nzType="video-camera"></span>
+          <span>nav 2</span>
+        </li>
+        <li nz-menu-item>
+          <span nz-icon nzType="upload"></span>
+          <span>nav 3</span>
+        </li>
+        <li nz-menu-item>
+          <span nz-icon nzType="user"></span>
+          <span>nav 4</span>
+        </li>
+      </ul> -->
+      <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+        <li nz-submenu nzOpen nzTitle="Dashboard" nzIcon="dashboard">
+          <ul>
+            <li nz-menu-item nzMatchRouter>
+              <a routerLink="/welcome">Welcome</a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a>Monitor</a>
+            </li>
+            <li nz-menu-item nzMatchRouter>
+              <a>Workplace</a>
+            </li>
+          </ul>
+        </li>
+        <li nz-submenu nzOpen nzTitle="Form" nzIcon="form">
+          <ul>
+            <li nz-menu-item nzMatchRouter>
+              <a>Basic Form</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nz-sider>
+
+    <nz-layout *ngIf="isCollapsed">
+      <!-- <nz-header style="position: sticky; top: 0; ">Header</nz-header> -->
+      <!-- <nz-header> -->
+      <ion-header>
+        <span
+          class="trigger"
+          nz-icon
+          [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+          (click)="isCollapsed = !isCollapsed"
+        ></span>
+      </ion-header> 
+      <!-- </nz-header> -->
+
+      <!-- <nz-content> -->
+      <ion-content>
+        <div class="inner-content">
+          <!-- Content -->
+          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Assumenda totam est commodi nobis molestias tenetur, repudiandae perspiciatis vel voluptate. Saepe inventore fugiat suscipit rerum sunt dolore sit non autem commodi?
+          Sunt aut similique delectus odit accusamus! Cupiditate architecto laborum totam assumenda iusto ad vero quos natus. Esse itaque optio totam maxime nam ipsum quos? Repellendus quidem iusto obcaecati voluptatum commodi?
+          Sit laborum perspiciatis deleniti reprehenderit ea culpa consectetur quidem, a ex voluptate odio autem doloribus quos accusamus atque alias, esse neque assumenda unde doloremque qui? Possimus voluptatibus ab qui ratione.
+          Atque voluptatibus rerum quas quod consequatur error deserunt eligendi optio facere maxime fugit quia nam quidem molestias numquam assumenda corporis possimus quisquam, ducimus praesentium esse, dolor similique! Atque, dolor architecto!
+          Fugiat illo sed nulla quos, at repellendus explicabo amet obcaecati ad ipsam provident quod qui voluptatem quibusdam sit eum culpa temporibus voluptate facilis pariatur iure voluptatum! Eius dignissimos labore eaque.
+          Ex numquam corrupti autem et eligendi minus debitis similique, quod quo hic ipsum tempora ipsa doloremque harum consectetur quae ratione nihil magni laborum eos molestias quos molestiae nobis. Aliquam, accusantium?
+          Laborum sequi cupiditate non placeat accusantium assumenda beatae impedit cumque rem est qui nostrum ipsam reiciendis dolorem, in facere minima labore neque voluptate aspernatur adipisci harum nisi. Eligendi, enim sit.
+          Ea ipsa mollitia ratione doloremque delectus hic tenetur, labore, quia iusto officiis deleniti ad eveniet tempore debitis minima dolorum maxime perspiciatis ullam, commodi quam! Libero veritatis impedit magni veniam excepturi!
+          Esse, at. Eligendi perferendis obcaecati earum et quidem eius aspernatur exercitationem eaque ex nam, porro beatae quas voluptatibus? Sunt magnam delectus distinctio illum quisquam, minima laudantium necessitatibus veniam qui! Sint?
+          Totam eius recusandae, debitis atque sint nemo molestiae ut delectus nesciunt, nisi, nobis architecto nam placeat rerum. Alias hic, incidunt sapiente recusandae voluptatum doloribus rem magni omnis reiciendis nemo eos!
+        </div>
+      </ion-content>
+      <!-- </nz-content> -->
+
+      <!-- <nz-footer>Ant Design ©2020 Implement By Angular</nz-footer> -->
+    </nz-layout>
+  </nz-layout>
+
+</ion-app>
