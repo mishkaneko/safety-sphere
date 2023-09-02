@@ -20,6 +20,8 @@ import { IncidentMapModule } from './pages/incident-map/incident-map.module';
 import { ReportIncidentModule } from './pages/report-incident/report-incident.module';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
 
 registerLocaleData(zh);
 
@@ -42,6 +44,8 @@ registerLocaleData(zh);
     ReportIncidentModule,
     NzFormModule,
     NzSelectModule,
+    NzDatePickerModule,
+    NzTimePickerModule,
   ],
   providers: [{ provide: NZ_I18N, useValue: zh_TW }],
   bootstrap: [AppComponent],
