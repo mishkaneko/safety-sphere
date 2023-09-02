@@ -7,7 +7,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  // isCollapsed = false;
   isCollapsed = true;
-  tabs = [1, 2, 3, 4];
+
+  closeSideMenu = () => {
+    this.isCollapsed = true
+  }
 }
