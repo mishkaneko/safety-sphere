@@ -1,5 +1,17 @@
-import { Component, ElementRef, NgZone, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  NgZone,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { GoogleMap } from '@angular/google-maps';
+
+interface Coordinates {
+  lat: number | undefined;
+  lng: number | undefined;
+}
 
 @Component({
   selector: 'google-search',
@@ -11,6 +23,12 @@ export class GoogleSearchComponent {
   public searchElementRef!: ElementRef;
   @ViewChild(GoogleMap)
   public map!: GoogleMap;
+
+  // Output coordinates to report-incident
+  @Output() valueEmitter = new EventEmitter<{
+    lat: number | undefined;
+    lng: number | undefined;
+  }>();
 
   constructor(private ngZone: NgZone) {}
 
@@ -35,11 +53,19 @@ export class GoogleSearchComponent {
           return;
         }
 
-        console.log(
-          place.geometry.location?.lat(),
-          place.geometry.location?.lng()
-        );
+        const coordinates: Coordinates = {
+          lat: place.geometry.location?.lat(),
+          lng: place.geometry.location?.lng(),
+        };
+        // Emits coordinates to report-incident
+        this.valueEmitter.emit(coordinates);
       });
     });
+  }
+
+  // Creates a fn to clear input
+  clearSearchInput() {
+    const inputElement = this.searchElementRef.nativeElement;
+    inputElement.value = '';
   }
 }

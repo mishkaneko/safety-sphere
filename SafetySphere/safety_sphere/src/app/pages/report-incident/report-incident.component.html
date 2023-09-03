@@ -1,9 +1,9 @@
 <h1>報告事件</h1>
-<form nz-form>
+<form nz-form [formGroup]="validateForm" (ngSubmit)="onSubmit()">
   <nz-form-item>
-    <nz-form-label nzRequired>事件類別</nz-form-label>
+    <nz-form-label>事件類別</nz-form-label>
     <nz-form-control>
-      <nz-select nzPlaceHolder="請選擇">
+      <nz-select nzPlaceHolder="請選擇" formControlName="incidentType">
         <nz-option nzValue="physicalAssault" nzLabel="肢體襲擊"></nz-option>
         <nz-option nzValue="verbalThreat" nzLabel="言語威脅"></nz-option>
         <nz-option nzValue="sexualAssault" nzLabel="非禮/性侵犯"></nz-option>
@@ -22,25 +22,42 @@
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
-    <nz-form-label nzRequired>日期</nz-form-label>
-    <nz-form-control>
+    <nz-form-label>日期</nz-form-label>
+    <nz-form-control nzErrorTip="請選擇日期!">
       <nz-date-picker formControlName="datePicker"></nz-date-picker>
     </nz-form-control>
   </nz-form-item>
   <nz-form-item
-    ><nz-form-label nzRequired>時間</nz-form-label
-    ><nz-form-control
-      ><nz-time-picker nzFormat="a h:mm"></nz-time-picker></nz-form-control
+    ><nz-form-label>時間</nz-form-label
+    ><nz-form-control nzErrorTip="請選擇時間!"
+      ><nz-time-picker
+        nzFormat="a h:mm"
+        formControlName="timePicker"
+      ></nz-time-picker></nz-form-control
   ></nz-form-item>
   <nz-form-item
-    ><nz-form-label nzRequired>地址</nz-form-label
-    ><nz-form-control><google-search></google-search> </nz-form-control
+    ><nz-form-label>地址</nz-form-label
+    ><nz-form-control nzErrorTip="請輸入地址!"
+      ><google-search
+        (valueEmitter)="receiveCoordinatesFromChild($event)"
+      ></google-search></nz-form-control
   ></nz-form-item>
   <nz-form-item>
-    <nz-form-label nzRequired>事發經過</nz-form-label
-    ><nz-form-control>
-      <textarea nz-input placeholder="請輸入" nzAutosize></textarea>
+    <nz-form-label>事發經過</nz-form-label
+    ><nz-form-control nzErrorTip="請描述事發經過!">
+      <textarea
+        nz-input
+        placeholder="請輸入"
+        nzAutosize
+        formControlName="incidentDetails"
+      ></textarea>
     </nz-form-control>
   </nz-form-item>
-  <nz-form-item><button nz-button nzType="primary">提交</button> </nz-form-item>
+  <nz-form-item
+    ><nz-form-control
+      ><button nz-button nzType="primary" [disabled]="!validateForm.valid">
+        提交
+      </button></nz-form-control
+    >
+  </nz-form-item>
 </form>
