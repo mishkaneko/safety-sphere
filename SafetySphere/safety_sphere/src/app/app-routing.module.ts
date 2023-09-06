@@ -1,8 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { IncidentMapComponent } from './pages/incident-map/incident-map.component';
-import { ReportIncidentComponent } from './pages/report-incident/report-incident.component';
-import { UserProfileComponent } from './pages/user-profile/user-profile.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/welcome' },
@@ -11,9 +8,27 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/welcome/welcome.module').then((m) => m.WelcomeModule),
   },
-  { path: 'incident-map', component: IncidentMapComponent },
-  { path: 'report-incident', component: ReportIncidentComponent },
-  { path: 'user-profile', component: UserProfileComponent },
+  {
+    path: 'incident-map',
+    loadChildren: () =>
+      import('./pages/incident-map/incident-map.module').then(
+        (m) => m.IncidentMapModule
+      ),
+  },
+  {
+    path: 'report-incident',
+    loadChildren: () =>
+      import('./pages/report-incident/report-incident.module').then(
+        (m) => m.ReportIncidentModule
+      ),
+  },
+  {
+    path: 'user-profile',
+    loadChildren: () =>
+      import('./pages/user-profile/user-profile.module').then(
+        (m) => m.UserProfileModule
+      ),
+  },
 ];
 
 @NgModule({
