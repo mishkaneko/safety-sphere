@@ -1,3 +1,4 @@
+import { ReportIncidentApiService } from './../../@services/report-incident-api.service';
 import { Component, ViewChild } from '@angular/core';
 import {
   UntypedFormBuilder,
@@ -23,7 +24,10 @@ export class ReportIncidentComponent {
   @ViewChild(GoogleSearchComponent)
   googleSearchComponent!: GoogleSearchComponent;
 
-  constructor(private fb: UntypedFormBuilder) {
+  constructor(
+    private fb: UntypedFormBuilder,
+    private reportIncidentApiService: ReportIncidentApiService
+  ) {
     this.receivedCoordinates = {
       lat: undefined,
       lng: undefined,
@@ -61,6 +65,14 @@ export class ReportIncidentComponent {
     this.validateForm.reset();
     this.googleSearchComponent.clearSearchInput();
 
-    console.log(formObj);
+    // Send data to service
+    this.reportIncidentApiService.sendDataToServer(formObj).subscribe({
+      next: (response) => {
+        console.log('Success:', response);
+      },
+      error: (error) => {
+        console.error('Error:', error);
+      },
+    });
   }
 }

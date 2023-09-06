@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { IncidentMapComponent } from './pages/incident-map/incident-map.component';
 import { ReportIncidentComponent } from './pages/report-incident/report-incident.component';
+// import { UserProfileComponent } from './pages/user-profile/user-profile.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/welcome' },
@@ -12,6 +13,7 @@ const routes: Routes = [
   },
   { path: 'incident-map', component: IncidentMapComponent },
   { path: 'report-incident', component: ReportIncidentComponent },
+  //   { path: 'user-profile', component: UserProfileComponent },
 ];
 
 @NgModule({

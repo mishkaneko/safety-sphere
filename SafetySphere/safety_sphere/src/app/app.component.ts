@@ -4,12 +4,12 @@ import { Component } from '@angular/core';
   selector: 'app-root',
   // selector: 'nz-demo-layout-responsive',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
   isCollapsed = true;
 
   closeSideMenu = () => {
-    this.isCollapsed = true
-  }
+    this.isCollapsed = true;
+  };
 }

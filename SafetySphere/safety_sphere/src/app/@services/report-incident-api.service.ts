@@ -11,7 +11,7 @@ export class ReportIncidentApiService {
   sendDataToServer(data: any) {
     const apiUrl = 'http://localhost:5000/report-incident/user-report';
     // Sends post request to server
-    console.log(data);
+    console.log('service:', data);
 
     // Adds error handling using catchError
     return this.http.post(apiUrl, data).pipe(
