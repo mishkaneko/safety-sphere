@@ -6,7 +6,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./incident-map.component.scss'],
 })
 export class IncidentMapComponent {
-  constructor() {}
+  constructor() {
+    console.log('incident-map 111');
+  }
 
   zoom = 16;
   center!: google.maps.LatLngLiteral;
@@ -21,6 +23,8 @@ export class IncidentMapComponent {
   };
 
   ngOnInit() {
+    console.log('incident-map 222');
+
     navigator.geolocation.getCurrentPosition((position) => {
       this.center = {
         // Get current location

@@ -16,12 +16,13 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { GoogleMapsModule } from '@angular/google-maps';
-import { IncidentMapModule } from './pages/incident-map/incident-map.module';
-import { ReportIncidentModule } from './pages/report-incident/report-incident.module';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
+import { IncidentMapModule } from './pages/incident-map/incident-map.module';
+import { ReportIncidentModule } from './pages/report-incident/report-incident.module';
+import { UserProfileModule } from './pages/user-profile/user-profile.module';
 
 registerLocaleData(zh);
 
@@ -39,13 +40,15 @@ registerLocaleData(zh);
     NzTabsModule,
     NzButtonModule,
     NzIconModule,
-    IncidentMapModule,
     GoogleMapsModule,
-    ReportIncidentModule,
     NzFormModule,
     NzSelectModule,
     NzDatePickerModule,
     NzTimePickerModule,
+    // Pages
+    IncidentMapModule,
+    ReportIncidentModule,
+    UserProfileModule,
   ],
   providers: [{ provide: NZ_I18N, useValue: zh_TW }],
   bootstrap: [AppComponent],

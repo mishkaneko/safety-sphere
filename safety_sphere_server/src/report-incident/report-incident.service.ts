@@ -20,7 +20,8 @@ export class ReportIncidentService {
         latitude: dto.coordinates.lng,
         description: dto.incidentDetails,
       });
-      return 'Incident report saved into db';
+      return { message: 'Incident report saved into db' };
+      // return 'Incident report saved into db';
     } catch (error) {
       throw Error(error);
     }

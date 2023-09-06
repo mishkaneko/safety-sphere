@@ -1,2 +1,2 @@
 select *
-from "incident_type";
+from "user";
