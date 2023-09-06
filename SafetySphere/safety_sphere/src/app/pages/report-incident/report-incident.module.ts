@@ -8,6 +8,7 @@ import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { GoogleSearchComponent } from './google-search/google-search.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ReportIncidentRoutingModule } from './report-incident-routing.module';
 
 @NgModule({
   imports: [
@@ -17,6 +18,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     NzTimePickerModule,
     GoogleMapsModule,
     ReactiveFormsModule,
+    ReportIncidentRoutingModule,
   ],
   declarations: [ReportIncidentComponent, GoogleSearchComponent],
   exports: [ReportIncidentComponent],

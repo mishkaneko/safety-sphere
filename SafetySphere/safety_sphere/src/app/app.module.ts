@@ -15,11 +15,12 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { GoogleMapsModule } from '@angular/google-maps';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
+import { GoogleMapsModule } from '@angular/google-maps';
+import { UserProfileRoutingModule } from './pages/user-profile/user-profile-routing.module';
 
 registerLocaleData(zh);
 

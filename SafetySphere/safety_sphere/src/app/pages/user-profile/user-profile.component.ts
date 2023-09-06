@@ -14,7 +14,9 @@ import {
 export class UserProfileComponent {
   userProfileForm!: UntypedFormGroup;
 
-  constructor(private fb: UntypedFormBuilder, private apiService: ApiService) {}
+  constructor(private fb: UntypedFormBuilder, private apiService: ApiService) {
+    console.log('FROM USER PROFILE COMPONENT');
+  }
 
   ngOnInit(): void {
     // Initializes the form controls in the constructor

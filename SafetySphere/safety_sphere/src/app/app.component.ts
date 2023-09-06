@@ -16,4 +16,6 @@ export class AppComponent {
   closeSideMenu = () => {
     this.isCollapsed = true;
   };
+
+  // title = 'safety_sphere';
 }
