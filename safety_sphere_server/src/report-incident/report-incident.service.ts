@@ -12,25 +12,22 @@ export class ReportIncidentService {
       await knex('user_report').insert({
         user_id: '1',
         incident_id: dto.incidentType,
-        date: 'date',
-        // date: dto.date,
-        time: 'time',
-        // time: dto.time,
+        date: dto.date,
+        time: dto.time,
         longitude: dto.coordinates.lat,
         latitude: dto.coordinates.lng,
         description: dto.incidentDetails,
       });
-      return { message: 'Incident report saved into db' };
-      // return 'Incident report saved into db';
+      return { message: `Incident report saved into db ${dto.date}` };
     } catch (error) {
-      throw Error(error);
+      throw Error(`hii${dto.date}`);
     }
   }
 
   private transformDto(dto: CreateIncidentReportDto) {
     dto.incidentType = this.transformIncidentType(dto.incidentType);
-    // dto.date = this.transformDate(dto.date);
-    // dto.time = this.transformTime(dto.time);
+    dto.date = this.transformDate(dto.date);
+    dto.time = this.transformTime(dto.time);
     return dto;
   }
 
@@ -55,26 +52,28 @@ export class ReportIncidentService {
     }
   }
 
-  // private transformDate(date: string) {
-  //   let transformedDate = date.match(/(\w{3}) (\d{2}) (\d{4})/);
-  //   const month = transformedDate[1];
-  //   const day = transformedDate[2];
-  //   const year = transformedDate[3];
-  //   const parsedDate = new Date(`${year}-${month}-${day}`);
+  private transformDate(date: string) {
+    // let transformedDate = date.match(/(\w{3}) (\d{2}) (\d{4})/);
+    let transformedDate = date.match(/^(\d{4}-\d{2}-\d{2})/);
+    // const month = transformedDate[1];
+    // const day = transformedDate[2];
+    // const year = transformedDate[3];
+    // const parsedDate = new Date(`${year}-${month}-${day}`);
 
-  //   // Format the date in yyyy/mm/dd format
-  //   const formattedDate = parsedDate
-  //     .toLocaleDateString('en-UK', {
-  //       year: 'numeric',
-  //       month: '2-digit',
-  //       day: '2-digit',
-  //     })
-  //     .replace(/\//g, '-');
-  //   return formattedDate;
-  // }
+    // Format the date in yyyy/mm/dd format
+    // const formattedDate = parsedDate
+    //   .toLocaleDateString('en-UK', {
+    //     year: 'numeric',
+    //     month: '2-digit',
+    //     day: '2-digit',
+    //   })
+    //   .replace(/\//g, '-');
+    // return formattedDate;
+    return transformedDate[0];
+  }
 
-  // private transformTime(time: string) {
-  //   let formattedTime = time.match(/(\d{2}:\d{2}:\d{2})/)[0];
-  //   return formattedTime;
-  // }
+  private transformTime(time: string) {
+    let formattedTime = time.match(/(\d{2}:\d{2})/)[0];
+    return formattedTime;
+  }
 }
