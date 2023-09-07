@@ -89,6 +89,9 @@
         </ul>
       </li>
       <li nz-menu-item nzMatchRouter>
+        <a routerLink="/escape-route">Escape route</a>
+      </li>
+      <li nz-menu-item nzMatchRouter>
         <a routerLink="/incident-map">事件地圖</a>
       </li>
       <li nz-menu-item nzMatchRouter>
@@ -100,8 +103,10 @@
     </ul>
   </nz-sider>
 
-  <nz-layout *ngIf="isCollapsed">
-    <!-- <nz-header style="position: sticky; top: 0; ">Header</nz-header> -->
+  <nz-layout
+    [hidden]="!isCollapsed"
+    style="display: flex; flex-direction: column"
+  >
     <nz-header>
       <span
         class="trigger"
@@ -111,45 +116,6 @@
       ></span>
     </nz-header>
 
-    <nz-content>
-      <div class="inner-content">
-        <router-outlet></router-outlet>
-        <!-- Content -->
-        <!-- Lorem marem ipsum dolor sit amet consectetur, adipisicing elit. Assumenda
-        totam est commodi nobis molestias tenetur, repudiandae perspiciatis vel
-        voluptate. Saepe inventore fugiat suscipit rerum sunt dolore sit non
-        autem commodi? Sunt aut similique delectus odit accusamus! Cupiditate
-        architecto laborum totam assumenda iusto ad vero quos natus. Esse itaque
-        optio totam maxime nam ipsum quos? Repellendus quidem iusto obcaecati
-        voluptatum commodi? Sit laborum perspiciatis deleniti reprehenderit ea
-        culpa consectetur quidem, a ex voluptate odio autem doloribus quos
-        accusamus atque alias, esse neque assumenda unde doloremque qui?
-        Possimus voluptatibus ab qui ratione. Atque voluptatibus rerum quas quod
-        consequatur error deserunt eligendi optio facere maxime fugit quia nam
-        quidem molestias numquam assumenda corporis possimus quisquam, ducimus
-        praesentium esse, dolor similique! Atque, dolor architecto! Fugiat illo
-        sed nulla quos, at repellendus explicabo amet obcaecati ad ipsam
-        provident quod qui voluptatem quibusdam sit eum culpa temporibus
-        voluptate facilis pariatur iure voluptatum! Eius dignissimos labore
-        eaque. Ex numquam corrupti autem et eligendi minus debitis similique,
-        quod quo hic ipsum tempora ipsa doloremque harum consectetur quae
-        ratione nihil magni laborum eos molestias quos molestiae nobis. Aliquam,
-        accusantium? Laborum sequi cupiditate non placeat accusantium assumenda
-        beatae impedit cumque rem est qui nostrum ipsam reiciendis dolorem, in
-        facere minima labore neque voluptate aspernatur adipisci harum nisi.
-        Eligendi, enim sit. Ea ipsa mollitia ratione doloremque delectus hic
-        tenetur, labore, quia iusto officiis deleniti ad eveniet tempore debitis
-        minima dolorum maxime perspiciatis ullam, commodi quam! Libero veritatis
-        impedit magni veniam excepturi! Esse, at. Eligendi perferendis obcaecati
-        earum et quidem eius aspernatur exercitationem eaque ex nam, porro
-        beatae quas voluptatibus? Sunt magnam delectus distinctio illum
-        quisquam, minima laudantium necessitatibus veniam qui! Sint? Totam eius
-        recusandae, debitis atque sint nemo molestiae ut delectus nesciunt,
-        nisi, nobis architecto nam placeat rerum. Alias hic, incidunt sapiente
-        recusandae voluptatum doloribus gni omnis reiciendis nemo eos! -->
-      </div>
-    </nz-content>
-
-    <!-- <nz-footer>Ant Design ©2020 Implement By Angular</nz-footer> -->
+    <router-outlet></router-outlet>
   </nz-layout>
 </nz-layout>

@@ -20,7 +20,6 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
 import { GoogleMapsModule } from '@angular/google-maps';
-import { UserProfileRoutingModule } from './pages/user-profile/user-profile-routing.module';
 
 registerLocaleData(zh);
 

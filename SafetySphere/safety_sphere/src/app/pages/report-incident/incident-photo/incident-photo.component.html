@@ -1,0 +1,6 @@
+<button nz-button type="button" (click)="takePhoto()">拍照</button>
+<!-- <button nz-button type="button" (click)="pickPhoto()">上載相片</button> -->
+<button nz-button (click)="pickPhoto()">上載相片</button>
+<div *ngFor="let imageUrl of selectedImages">
+  <img nz-image [src]="imageUrl" />
+</div>

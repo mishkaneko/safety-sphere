@@ -1,63 +1,72 @@
-<h1>報告事件</h1>
-<form nz-form [formGroup]="validateForm" (ngSubmit)="onSubmit()">
-  <nz-form-item>
-    <nz-form-label>事件類別</nz-form-label>
-    <nz-form-control>
-      <nz-select nzPlaceHolder="請選擇" formControlName="incidentType">
-        <nz-option nzValue="physicalAssault" nzLabel="肢體襲擊"></nz-option>
-        <nz-option nzValue="verbalThreat" nzLabel="言語威脅"></nz-option>
-        <nz-option nzValue="sexualAssault" nzLabel="非禮/性侵犯"></nz-option>
-        <nz-option
-          nzValue="suspiciousIndividuals"
-          nzLabel="可疑人物"
-        ></nz-option>
-        <nz-option nzValue="theft" nzLabel="盜竊"></nz-option>
-        <nz-option nzValue="fallingFromHeights" nzLabel="高空墮物"></nz-option>
-        <nz-option
-          nzValue="animalEncounters"
-          nzLabel="野生動物襲擊"
-        ></nz-option>
-        <nz-option nzValue="otherIncidentTypes" nzLabel="其他"></nz-option>
-      </nz-select>
-    </nz-form-control>
-  </nz-form-item>
-  <nz-form-item>
-    <nz-form-label>日期</nz-form-label>
-    <nz-form-control nzErrorTip="請選擇日期!">
-      <nz-date-picker formControlName="datePicker"></nz-date-picker>
-    </nz-form-control>
-  </nz-form-item>
-  <nz-form-item
-    ><nz-form-label>時間</nz-form-label
-    ><nz-form-control nzErrorTip="請選擇時間!"
-      ><nz-time-picker
-        nzFormat="a h:mm"
-        formControlName="timePicker"
-      ></nz-time-picker></nz-form-control
-  ></nz-form-item>
-  <nz-form-item
-    ><nz-form-label>地址</nz-form-label
-    ><nz-form-control nzErrorTip="請輸入地址!"
-      ><google-search
-        (valueEmitter)="receiveCoordinatesFromChild($event)"
-      ></google-search></nz-form-control
-  ></nz-form-item>
-  <nz-form-item>
-    <nz-form-label>事發經過</nz-form-label
-    ><nz-form-control nzErrorTip="請描述事發經過!">
-      <textarea
-        nz-input
-        placeholder="請輸入"
-        nzAutosize
-        formControlName="incidentDetails"
-      ></textarea>
-    </nz-form-control>
-  </nz-form-item>
-  <nz-form-item
-    ><nz-form-control
-      ><button nz-button nzType="primary" [disabled]="!validateForm.valid">
-        提交
-      </button></nz-form-control
-    >
-  </nz-form-item>
-</form>
+<div id="reportIncidentDiv">
+  <h1>報告事件</h1>
+  <form nz-form [formGroup]="validateForm" (ngSubmit)="onSubmit()">
+    <nz-form-item>
+      <nz-form-label>事件類別</nz-form-label>
+      <nz-form-control>
+        <nz-select nzPlaceHolder="請選擇" formControlName="incidentType">
+          <nz-option nzValue="physicalAssault" nzLabel="肢體襲擊"></nz-option>
+          <nz-option nzValue="verbalThreat" nzLabel="言語威脅"></nz-option>
+          <nz-option nzValue="sexualAssault" nzLabel="非禮/性侵犯"></nz-option>
+          <nz-option
+            nzValue="suspiciousIndividuals"
+            nzLabel="可疑人物"
+          ></nz-option>
+          <nz-option nzValue="theft" nzLabel="盜竊"></nz-option>
+          <nz-option
+            nzValue="fallingFromHeights"
+            nzLabel="高空墮物"
+          ></nz-option>
+          <nz-option
+            nzValue="animalEncounters"
+            nzLabel="野生動物襲擊"
+          ></nz-option>
+          <nz-option nzValue="otherIncidentTypes" nzLabel="其他"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label>日期</nz-form-label>
+      <nz-form-control nzErrorTip="請選擇日期!">
+        <nz-date-picker formControlName="datePicker"></nz-date-picker>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item
+      ><nz-form-label>時間</nz-form-label
+      ><nz-form-control nzErrorTip="請選擇時間!"
+        ><nz-time-picker
+          nzFormat="a h:mm"
+          formControlName="timePicker"
+        ></nz-time-picker></nz-form-control
+    ></nz-form-item>
+    <nz-form-item
+      ><nz-form-label>地址</nz-form-label
+      ><nz-form-control nzErrorTip="請輸入地址!"
+        ><google-search
+          (valueEmitter)="receiveCoordinatesFromChild($event)"
+        ></google-search></nz-form-control
+    ></nz-form-item>
+    <nz-form-item>
+      <nz-form-label>事發經過</nz-form-label
+      ><nz-form-control nzErrorTip="請描述事發經過!">
+        <textarea
+          nz-input
+          placeholder="請輸入"
+          nzAutosize
+          formControlName="incidentDetails"
+        ></textarea>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label>事件相片</nz-form-label
+      ><nz-form-control><incident-photo></incident-photo></nz-form-control
+    ></nz-form-item>
+    <nz-form-item
+      ><nz-form-control
+        ><button nz-button nzType="primary" [disabled]="!validateForm.valid">
+          提交
+        </button></nz-form-control
+      >
+    </nz-form-item>
+  </form>
+</div>

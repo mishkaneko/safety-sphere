@@ -9,6 +9,13 @@ const routes: Routes = [
       import('./pages/welcome/welcome.module').then((m) => m.WelcomeModule),
   },
   {
+    path: 'escape-route',
+    loadChildren: () =>
+      import('./pages/escape-route/escape-route.module').then(
+        (m) => m.EscapeRouteModule
+      ),
+  },
+  {
     path: 'incident-map',
     loadChildren: () =>
       import('./pages/incident-map/incident-map.module').then(

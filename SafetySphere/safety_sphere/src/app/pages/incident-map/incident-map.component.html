@@ -1,13 +1,9 @@
-<div #mapDiv>
-  <google-map
-    height="80vh"
-    width="100%"
-    [zoom]="zoom"
-    [center]="center"
-    [options]="options"
-  >
-  </google-map>
-</div>
+<div #mapDiv class="map">
+  <div #locateButtonContainer>
+    <button #locateButton [hidden]="!isViewInited" class="locate-button">
+      定位
+    </button>
+  </div>
 
-<button (click)="zoomIn()">Zoom in</button>
-<button (click)="zoomOut()">Zoom out</button>
+  <nz-spin *ngIf="!isViewInited" nzTip="Loading..."></nz-spin>
+</div>

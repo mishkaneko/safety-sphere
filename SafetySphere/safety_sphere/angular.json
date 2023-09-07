@@ -45,7 +45,6 @@
               }
             ],
             "styles": [
-              "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/theme.less",
               "src/styles.scss"
             ],

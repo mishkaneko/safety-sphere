@@ -1,0 +1,11 @@
+Hi from er html
+
+<div #mapDiv class="map">
+  <div #locateButtonContainer>
+    <!-- [hidden]="!isViewInited" -->
+    <button #locateButton class="locate-button">定位</button>
+  </div>
+
+  <!-- *ngIf="!isViewInited" -->
+  <nz-spin nzTip="Loading..."></nz-spin>
+</div>
