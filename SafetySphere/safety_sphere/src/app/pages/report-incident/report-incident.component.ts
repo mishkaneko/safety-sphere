@@ -6,11 +6,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { GoogleSearchComponent } from './google-search/google-search.component';
-
-interface Coordinates {
-  lat: number | undefined;
-  lng: number | undefined;
-}
+import { IncidentPhotoComponent } from './incident-photo/incident-photo.component';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-report-incident',
@@ -19,17 +16,18 @@ interface Coordinates {
 })
 export class ReportIncidentComponent {
   validateForm!: UntypedFormGroup;
-  receivedCoordinates: Coordinates;
 
   @ViewChild(GoogleSearchComponent)
   googleSearchComponent!: GoogleSearchComponent;
 
-  constructor(private fb: UntypedFormBuilder, private apiService: ApiService) {
-    this.receivedCoordinates = {
-      lat: undefined,
-      lng: undefined,
-    };
-  }
+  @ViewChild(IncidentPhotoComponent)
+  incidentPhotoComponent!: IncidentPhotoComponent;
+
+  constructor(
+    private fb: UntypedFormBuilder,
+    private apiService: ApiService,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
     // Initialize the form controls in the constructor
@@ -41,26 +39,37 @@ export class ReportIncidentComponent {
     });
   }
 
-  // From child
-  receiveCoordinatesFromChild(coordinates: Coordinates) {
-    this.receivedCoordinates = coordinates;
-    return this.receivedCoordinates;
-  }
-
   onSubmit() {
     // // Access form values using the FormGroup
     const incidentType = this.validateForm.get('incidentType')!.value;
     const date = this.validateForm.get('datePicker')!.value;
     const time = this.validateForm.get('timePicker')!.value;
-    const coordinates = this.receiveCoordinatesFromChild(
-      this.receivedCoordinates
-    );
+    const location = this.googleSearchComponent.location;
+    const coordinates = this.googleSearchComponent.coordinates;
     const incidentDetails = this.validateForm.get('incidentDetails')!.value;
-    const formObj = { incidentType, date, time, coordinates, incidentDetails };
+    const images = this.incidentPhotoComponent.selectedImages;
+    const formObj = {
+      incidentType,
+      date,
+      time,
+      location,
+      coordinates,
+      incidentDetails,
+      images,
+    };
+
+    // Create a custom MatSnackBarConfig
+    const snackBarConfig: MatSnackBarConfig = {
+      duration: 3000, // Duration in milliseconds
+      panelClass: ['submit-form-success-snackbar'], // CSS class for custom styling
+      verticalPosition: 'bottom', // Position at the bottom of the screen
+    };
 
     // Clear form
     this.validateForm.reset();
     this.googleSearchComponent.clearSearchInput();
+
+    console.log('report-incident-component: ', formObj);
 
     // Send data to service
     this.apiService
@@ -68,6 +77,8 @@ export class ReportIncidentComponent {
       .subscribe({
         next: (response) => {
           console.log('Success:', response);
+          // Display a snackbar on success
+          this.snackBar.open('成功遞交報告', '關閉', snackBarConfig);
         },
         error: (error) => {
           console.error('Error:', error);

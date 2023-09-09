@@ -13,4 +13,11 @@ export class ApiService {
     console.log('service:', data);
     return this.http.post(apiUrl, data);
   }
+
+  getDataFromServer(path: string) {
+    const apiUrl = `http://localhost:5000${path}`;
+    console.log('service for getting: ', this.http.get(apiUrl));
+
+    return this.http.get(apiUrl);
+  }
 }

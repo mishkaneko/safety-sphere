@@ -30,6 +30,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'report-incident-history',
+    loadChildren: () =>
+      import(
+        './pages/report-incident-history/report-incident-history.module'
+      ).then((m) => m.ReportIncidentHistoryModule),
+  },
+  {
     path: 'user-profile',
     loadChildren: () =>
       import('./pages/user-profile/user-profile.module').then(

@@ -1,11 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  EventEmitter,
-  NgZone,
-  Output,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, NgZone, ViewChild } from '@angular/core';
 import { GoogleMap } from '@angular/google-maps';
 
 interface Coordinates {
@@ -24,11 +17,8 @@ export class GoogleSearchComponent {
   @ViewChild(GoogleMap)
   public map!: GoogleMap;
 
-  // Output coordinates to report-incident
-  @Output() valueEmitter = new EventEmitter<{
-    lat: number | undefined;
-    lng: number | undefined;
-  }>();
+  coordinates: Coordinates = { lat: undefined, lng: undefined };
+  location: string = '';
 
   constructor(private ngZone: NgZone) {}
 
@@ -48,17 +38,28 @@ export class GoogleSearchComponent {
         // Gets place result
         let place: google.maps.places.PlaceResult = autocomplete.getPlace();
 
-        // Verifies result
+        // Verifies result for coordinates
         if (place.geometry === undefined || place.geometry === null) {
           return;
         }
 
-        const coordinates: Coordinates = {
+        this.coordinates = {
           lat: place.geometry.location?.lat(),
           lng: place.geometry.location?.lng(),
         };
-        // Emits coordinates to report-incident
-        this.valueEmitter.emit(coordinates);
+
+        console.log(place);
+
+        // Verifies result for location
+        if (
+          place.formatted_address === undefined ||
+          place.formatted_address === null
+        ) {
+          return;
+        }
+
+        // Extract the location name (the user-entered input)
+        this.location = `${place.name}, ${place.vicinity}`;
       });
     });
   }

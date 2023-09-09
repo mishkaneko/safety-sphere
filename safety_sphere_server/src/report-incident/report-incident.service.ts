@@ -14,13 +14,15 @@ export class ReportIncidentService {
         incident_id: dto.incidentType,
         date: dto.date,
         time: dto.time,
+        location: dto.location,
         longitude: dto.coordinates.lat,
         latitude: dto.coordinates.lng,
         description: dto.incidentDetails,
+        images: dto.images,
       });
       return { message: `Incident report saved into db ${dto.date}` };
     } catch (error) {
-      throw Error(`hii${dto.date}`);
+      throw Error(error);
     }
   }
 
