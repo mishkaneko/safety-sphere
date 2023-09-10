@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { NzImageService } from 'ng-zorro-antd/image';
 
@@ -8,6 +8,9 @@ import { NzImageService } from 'ng-zorro-antd/image';
   styleUrls: ['./incident-photo.component.scss'],
 })
 export class IncidentPhotoComponent {
+  @ViewChild('canvas', { static: true }) canvas!: ElementRef;
+  private ctx!: CanvasRenderingContext2D;
+
   // selectedImages: string[] = [];
   selectedImages: any;
   isReviewBtnDisabled = true;
@@ -32,10 +35,18 @@ export class IncidentPhotoComponent {
   async pickPhoto() {
     const images = await Camera.pickImages({
       // quality: 90,
-      width: 207,
+      // width: 207,
     });
-    console.log('images');
-    console.log(images);
+    const { format, webPath } = images.photos[0]
+    // const imageBlob = new Blob([webPath], { type: `image/${format}` })
+    // this.onImageSelected(format, imageBlob)
+    // fetch(webPath)
+    //   .then(response => response.blob())
+    //   .then(blobData => this.onImageSelected(format, blobData))
+    //   .catch(error => console.error(error))
+    const response = await fetch(webPath)
+    const blobData = await response.blob()
+    this.onImageSelected(format, blobData)
 
     // Check if there are selected photos and add them to the selectedImages array
     // if (images && images.photos && images.photos.length > 0) {
@@ -49,7 +60,6 @@ export class IncidentPhotoComponent {
     //           const arrayBuffer = reader.result; // This will be an ArrayBuffer
     //           if (arrayBuffer) {}
     //           const buffer = Buffer.from(arrayBuffer); // Convert ArrayBuffer to Buffer
-    //           console.log(buffer); // This will be a Node.js Buffer
     //         };
     //         reader.readAsArrayBuffer(blob);
     //       })
@@ -60,6 +70,37 @@ export class IncidentPhotoComponent {
     // }
 
     this.checkImgAvailability();
+  }
+
+  onImageSelected(imageFormat: string, imageBlob: Blob) {
+    const reader: FileReader = new FileReader();
+    reader.onload = (e: any) => {
+      const image = new Image();
+      image.onload = () => {
+        const maxWidth: number = 207;
+        let width = image.width;
+        let height = image.height;
+
+        if (width > maxWidth) {
+          height = (maxWidth / width) * height
+          width = maxWidth
+        }
+
+        const canvasElement: HTMLCanvasElement = this.canvas.nativeElement;
+        this.ctx = canvasElement.getContext('2d') as CanvasRenderingContext2D;
+        canvasElement.width = width;
+        canvasElement.height = height;
+        this.ctx.drawImage(image, 0, 0, width, height);
+
+        const resizedImageData = canvasElement.toDataURL(`image/${imageFormat}`);
+        console.log('resizedImageData')
+        console.log(resizedImageData)
+      };
+
+      image.src = e.target.result;
+    };
+
+    reader.readAsDataURL(imageBlob);
   }
 
   onClickReview() {
