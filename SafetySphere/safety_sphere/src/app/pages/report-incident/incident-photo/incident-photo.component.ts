@@ -11,7 +11,8 @@ export class IncidentPhotoComponent {
   @ViewChild('canvas', { static: true }) canvas!: ElementRef;
   private ctx!: CanvasRenderingContext2D;
 
-  selectedImages: string[] = [];
+  // selectedImages: string[] = [];
+  selectedImages: any;
   isReviewBtnDisabled = true;
 
   constructor(private nzImageService: NzImageService) {}
@@ -32,7 +33,10 @@ export class IncidentPhotoComponent {
 
   // Pick photo from gallery
   async pickPhoto() {
-    const images = await Camera.pickImages({});
+    const images = await Camera.pickImages({
+      // quality: 90,
+      // width: 207,
+    });
     const { format, webPath } = images.photos[0];
     // const imageBlob = new Blob([webPath], { type: `image/${format}` })
     // this.onImageSelected(format, imageBlob)
@@ -43,6 +47,27 @@ export class IncidentPhotoComponent {
     const response = await fetch(webPath);
     const blobData = await response.blob();
     this.onImageSelected(format, blobData);
+
+    // Check if there are selected photos and add them to the selectedImages array
+    // if (images && images.photos && images.photos.length > 0) {
+    //   // Convert blob into buffer
+    //   this.selectedImages = images.photos.map((photo) => {
+    //     fetch(photo.webPath)
+    //       .then((response) => response.blob())
+    //       .then((blob) => {
+    //         const reader = new FileReader();
+    //         reader.onload = function () {
+    //           const arrayBuffer = reader.result; // This will be an ArrayBuffer
+    //           if (arrayBuffer) {}
+    //           const buffer = Buffer.from(arrayBuffer); // Convert ArrayBuffer to Buffer
+    //         };
+    //         reader.readAsArrayBuffer(blob);
+    //       })
+    //       .catch((error) => {
+    //         console.error('Error converting blob: ', error);
+    //       });
+    //   });
+    // }
 
     this.checkImgAvailability();
   }
