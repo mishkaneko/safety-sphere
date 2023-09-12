@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { NzImageService } from 'ng-zorro-antd/image';
 
@@ -8,8 +8,10 @@ import { NzImageService } from 'ng-zorro-antd/image';
   styleUrls: ['./incident-photo.component.scss'],
 })
 export class IncidentPhotoComponent {
-  // selectedImages: string[] = [];
-  selectedImages: any;
+  @ViewChild('canvas', { static: true }) canvas!: ElementRef;
+  private ctx!: CanvasRenderingContext2D;
+
+  selectedImages: string[] = [];
   isReviewBtnDisabled = true;
 
   constructor(private nzImageService: NzImageService) {}
@@ -30,36 +32,65 @@ export class IncidentPhotoComponent {
 
   // Pick photo from gallery
   async pickPhoto() {
-    const images = await Camera.pickImages({
-      // quality: 90,
-      width: 207,
-    });
-    console.log('images');
-    console.log(images);
-
-    // Check if there are selected photos and add them to the selectedImages array
-    // if (images && images.photos && images.photos.length > 0) {
-    //   // Convert blob into buffer
-    //   this.selectedImages = images.photos.map((photo) => {
-    //     fetch(photo.webPath)
-    //       .then((response) => response.blob())
-    //       .then((blob) => {
-    //         const reader = new FileReader();
-    //         reader.onload = function () {
-    //           const arrayBuffer = reader.result; // This will be an ArrayBuffer
-    //           if (arrayBuffer) {}
-    //           const buffer = Buffer.from(arrayBuffer); // Convert ArrayBuffer to Buffer
-    //           console.log(buffer); // This will be a Node.js Buffer
-    //         };
-    //         reader.readAsArrayBuffer(blob);
-    //       })
-    //       .catch((error) => {
-    //         console.error('Error converting blob: ', error);
-    //       });
-    //   });
-    // }
+    const images = await Camera.pickImages({});
+    const { format, webPath } = images.photos[0];
+    // const imageBlob = new Blob([webPath], { type: `image/${format}` })
+    // this.onImageSelected(format, imageBlob)
+    // fetch(webPath)
+    //   .then(response => response.blob())
+    //   .then(blobData => this.onImageSelected(format, blobData))
+    //   .catch(error => console.error(error))
+    const response = await fetch(webPath);
+    const blobData = await response.blob();
+    this.onImageSelected(format, blobData);
 
     this.checkImgAvailability();
+  }
+
+  // Resize image using HTML5 Canvas API
+  onImageSelected(imageFormat: string, imageBlob: Blob) {
+    // Create a new FileReader obj ro read the img file
+    const reader: FileReader = new FileReader();
+    // Define event handler for when the FileReader finishes reading
+    reader.onload = (e: any) => {
+      // Creates img obj
+      const image = new Image();
+      // Define event handler for when the FileReader finishes loading
+      image.onload = () => {
+        const maxWidth: number = 207;
+        let width = image.width;
+        let height = image.height;
+
+        if (width > maxWidth) {
+          height = (maxWidth / width) * height;
+          width = maxWidth;
+        }
+
+        // Get reference to HTMLCanvasElement from DOM
+        const canvasElement: HTMLCanvasElement = this.canvas.nativeElement;
+        // Get 2D drawing context from canvas
+        this.ctx = canvasElement.getContext('2d') as CanvasRenderingContext2D;
+        // Set canvas dimensions to match resized image
+        canvasElement.width = width;
+        canvasElement.height = height;
+        // Draw the image onto the canvas with new dimensions
+        this.ctx.drawImage(image, 0, 0, width, height);
+
+        // Convert canvas content to dataUrl
+        const resizedImageData = canvasElement.toDataURL(
+          `image/${imageFormat}`
+        );
+        console.log('resizedImageData');
+        console.log(resizedImageData);
+      };
+
+      // Set src of img obj to the dataUrl obtained from FileReader
+      image.src = e.target.result;
+      this.selectedImages.push(e.target.result);
+    };
+
+    // Read the img file as dataUrl, triggering 'load' event when done
+    reader.readAsDataURL(imageBlob);
   }
 
   onClickReview() {

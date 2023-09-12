@@ -4,13 +4,12 @@ export async function up(knex: Knex): Promise<void> {
   await knex.schema.createTable('news_report', (table) => {
     table.increments();
     table.integer('incident_id').notNullable().unsigned();
-    table.string('news_source').notNullable();
-    table.string('news_date').notNullable();
-    table.string('incident_date');
-    table.string('incident_time');
-    table.string('longitude').notNullable();
-    table.string('latitude').notNullable();
-    table.string('content').notNullable();
+    table.string('location').notNullable();
+    table.string('title').notNullable();
+    table.string('source').notNullable();
+    table.string('summary').notNullable();
+    table.string('website').notNullable();
+    table.timestamp('created_at').defaultTo(knex.fn.now());
     table.foreign('incident_id').references('incident_type.id');
   });
 }

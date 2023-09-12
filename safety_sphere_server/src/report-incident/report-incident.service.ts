@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { knex } from '../knex';
 import { CreateIncidentReportDto } from './report-incident.dto';
+import { knex } from '../knex';
 
 @Injectable()
 export class ReportIncidentService {
@@ -15,12 +15,12 @@ export class ReportIncidentService {
         date: dto.date,
         time: dto.time,
         location: dto.location,
-        longitude: dto.coordinates.lat,
-        latitude: dto.coordinates.lng,
+        latitude: dto.coordinates.lat,
+        longitude: dto.coordinates.lng,
         description: dto.incidentDetails,
         images: dto.images,
       });
-      return { message: `Incident report saved into db ${dto.date}` };
+      return { message: `Incident report saved into db` };
     } catch (error) {
       throw Error(error);
     }

@@ -7,12 +7,14 @@ import { NzListModule } from 'ng-zorro-antd/list';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzImageModule } from 'ng-zorro-antd/image';
 import { IncidentPhotoHistoryComponent } from './incident-photo-history/incident-photo-history.component';
+import { EditIncidentComponent } from './edit-incident/edit-incident.component';
 
 @NgModule({
   declarations: [
     ReportIncidentHistoryComponent,
     IncidentIdToTypePipe,
     IncidentPhotoHistoryComponent,
+    EditIncidentComponent,
   ],
   imports: [
     CommonModule,

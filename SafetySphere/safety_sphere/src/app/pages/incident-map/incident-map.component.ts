@@ -1,18 +1,18 @@
-import {
-  Component,
-  ViewChild,
-  ElementRef,
-  AfterViewInit,
-  OnDestroy,
-} from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 import { Geolocation } from '@capacitor/geolocation';
-import { PositionService } from '../../@services/position.service';
+import { ApiService } from 'src/app/@services/api.service';
 
 declare const google: any;
 
-interface LatLng {
-  lat: number;
-  lng: number;
+interface UserReport {
+  incident: string;
+  date: string;
+  time: string;
+  location: string;
+  latitude: string;
+  longitude: string;
+  description: string;
+  images: string[];
 }
 
 @Component({
@@ -20,100 +20,132 @@ interface LatLng {
   templateUrl: './incident-map.component.html',
   styleUrls: ['./incident-map.component.scss'],
 })
-export class IncidentMapComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('mapDiv') mapDiv!: ElementRef;
-  @ViewChild('locateButtonContainer') locateButtonContainer!: ElementRef;
-  @ViewChild('locateButton') locateButton!: ElementRef;
+export class IncidentMapComponent implements AfterViewInit {
+  userReportList: UserReport[] = [];
 
-  private map: any;
-  private placesService: any;
-  protected isViewInited: boolean = false;
-  private oldUserLatLng: LatLng = { lat: 0, lng: 0 };
-  private userMarker: any;
-  private directionsService = new google.maps.DirectionsService();
-  private directionsRenderer = new google.maps.DirectionsRenderer({
-    suppressMarkers: true,
-  });
-
-  constructor(private positionService: PositionService) {}
+  constructor(private apiService: ApiService) {}
 
   async ngAfterViewInit() {
+    // Get current location
     const { coords } = await Geolocation.getCurrentPosition();
-    console.log('coords');
-    console.log(coords);
-    this.initMap({ lat: coords.latitude, lng: coords.longitude });
 
-    this.positionService.startCalculateCurrentPosition();
+    // Request needed libraries
+    const { Map } = (await google.maps.importLibrary(
+      'maps'
+    )) as google.maps.MapsLibrary;
+    const { AdvancedMarkerElement } = (await google.maps.importLibrary(
+      'marker'
+    )) as google.maps.MarkerLibrary;
+    const { LatLng } = (await google.maps.importLibrary(
+      'core'
+    )) as google.maps.CoreLibrary;
 
-    // 更新user定位
-    this.positionService.getCurrentPosition().subscribe((coords) => {
-      this.updateUserMarker({ lat: coords.latitude, lng: coords.longitude });
-    });
-
-    // 創建定位按鈕
-    this.createLocateButton();
-  }
-
-  ngOnDestroy() {
-    this.positionService.stopCalculateCurrentPosition();
-  }
-
-  // 創建定位按鈕
-  private createLocateButton() {
-    const locateButtonDiv: any = this.locateButtonContainer.nativeElement;
-    const locateButton: any = this.locateButton.nativeElement;
-    locateButton.addEventListener('click', () => {
-      // 移動地圖中心到定位位置
-      const latLng = new google.maps.LatLng(
-        this.oldUserLatLng.lat,
-        this.oldUserLatLng.lng
-      );
-      this.map.panTo(latLng);
-    });
-    this.map.controls[google.maps.ControlPosition.TOP_RIGHT].push(
-      locateButtonDiv
-    );
-    this.isViewInited = true;
-  }
-
-  private updateUserMarker(newUserLatLng: { lat: number; lng: number }) {
-    if (
-      newUserLatLng.lat === this.oldUserLatLng.lat &&
-      newUserLatLng.lng === this.oldUserLatLng.lng
-    )
-      return;
-    Object.assign(this.oldUserLatLng, newUserLatLng);
-    this.userMarker.setPosition(newUserLatLng);
-  }
-
-  private initMap(newUserLatLng: { lat: number; lng: number }) {
-    const mapOptions = {
-      center: newUserLatLng,
+    // Set up map
+    const center = new LatLng(22.321514402106235, 114.20919452522213);
+    // const center = new LatLng(coords.latitude, coords.longitude);
+    const map = new Map(document.getElementById('map') as HTMLElement, {
       zoom: 16,
-      styles: [
-        // 自定義地圖樣式
-        {
-          featureType: 'poi',
-          elementType: 'labels',
-          stylers: [{ visibility: 'off' }],
-        },
-      ],
-    };
-    const latLng = new google.maps.LatLng(newUserLatLng.lat, newUserLatLng.lng);
-    this.map = new google.maps.Map(this.mapDiv.nativeElement, mapOptions);
-    this.placesService = new google.maps.places.PlacesService(this.map);
-    Object.assign(this.oldUserLatLng, newUserLatLng);
-    // 移動地圖中心到定位位置
-    this.map.panTo(latLng);
-    // 創建標記並將其移動到定位位置
-    this.userMarker = new google.maps.Marker({
-      position: latLng,
-      map: this.map,
-      title: 'Current Location',
-      icon: {
-        url: 'https://cdn-icons-png.flaticon.com/512/1365/1365700.png',
-        scaledSize: new google.maps.Size(80, 80),
-      },
+      center,
+      disableDefaultUI: true,
+      mapId: '4504f8b37365c3d0',
     });
+
+    this.getUserReport().subscribe(
+      (data: UserReport[]) => {
+        this.userReportList = data;
+        this.createMarkers(map);
+      },
+      (error: any) => {
+        console.error('Error fetching data: ', error);
+      }
+    );
+  }
+
+  private getUserReport(): any {
+    return this.apiService.getDataFromServer('/incident-map/user-report');
+  }
+
+  private getNewsReport(): any {
+    return this.apiService.getDataFromServer('/incident-map/news-report');
+  }
+
+  private createMarkers(map: google.maps.Map) {
+    for (const userReport of this.userReportList) {
+      console.log(userReport);
+
+      const advancedMarkerElement =
+        new google.maps.marker.AdvancedMarkerElement({
+          map,
+          content: this.buildContent(userReport),
+          position: {
+            lat: parseFloat(userReport.latitude),
+            lng: parseFloat(userReport.longitude),
+          },
+          title: userReport.description,
+        });
+
+      advancedMarkerElement.addListener('click', () => {
+        this.toggleHighlight(advancedMarkerElement, userReport);
+      });
+    }
+  }
+
+  toggleHighlight(markerView: any, userReport: any) {
+    if (markerView.content.classList.contains('highlight')) {
+      markerView.content.classList.remove('highlight');
+      markerView.zIndex = null;
+    } else {
+      markerView.content.classList.add('highlight');
+      markerView.zIndex = 1;
+    }
+  }
+
+  buildContent(userReport: UserReport) {
+    function getIconClass(incident: string): string {
+      switch (incident) {
+        case '肢體襲擊':
+          return 'fa-solid fa-hand-fist fa-xl';
+        case '言語威脅':
+          return 'fa-solid fa-person-harassing  fa-xl';
+        case '非禮/性侵犯':
+          return 'fa-solid fa-mars-and-venus-burst  fa-xl';
+        case '可疑人物':
+          return 'fa-solid fa-person-circle-question  fa-xl';
+        case '盜竊':
+          return 'fa-solid fa-people-robbery  fa-xl';
+        case '高空墮物':
+          return 'fa-solid fa-person-falling-burst  fa-xl';
+        case '野生動物襲擊':
+          return 'fa-solid fa-paw  fa-xl';
+        default:
+          return '';
+      }
+    }
+    const content = document.createElement('div');
+    // content.classList.add('user-report');
+    content.classList.add('user-report');
+    content.innerHTML =
+      /*html*/
+      `
+        <div class="icon">
+          <i aria-hidden="true" class="${getIconClass(
+            userReport.incident
+          )}" title="${userReport.incident}"></i>
+      </div>
+      <div class="details">
+          <div class="incident-type">${userReport.incident}</div>
+          <div class="location">
+          <span class="details-icon"><i class="fa-solid fa-location-dot"></i></span>
+          <span>${userReport.location}</span>
+         </div>
+          <div class="date-and-time"><span class="details-icon"><i class="fa-solid fa-clock"></i></span><span>${
+            userReport.date
+          }&nbsp${userReport.time}</span></div>
+          <div class="description"> <span class="details-icon"><i class="fa-solid fa-info"></i></span><span>${
+            userReport.description
+          }</span></div>
+      </div>`;
+
+    return content;
   }
 }

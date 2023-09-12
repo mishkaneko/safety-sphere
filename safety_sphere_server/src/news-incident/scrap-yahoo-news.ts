@@ -1,7 +1,10 @@
 import { Browser, Page, chromium } from 'playwright';
 import { listOfHKLocations } from './list-of-hk-locations';
+import { NewsIncidentService } from './news-incident.service';
 
-const newsKeywords = ['傷人', '非禮', '高空墮物', '野豬', '盜竊'];
+const newsKeywords = ['傷人', '非禮', '盜竊', '高空墮物', '野豬'];
+const newsIncidentService = new NewsIncidentService();
+let dataArr = [];
 
 async function main(newsKeywords: string[]) {
   const browser: Browser = await chromium.launch({ headless: false });
@@ -10,9 +13,11 @@ async function main(newsKeywords: string[]) {
     waitUntil: 'domcontentloaded',
   });
   for (let keyword of newsKeywords) {
-    await scrapeByKeyword(page, keyword);
+    let data = await scrapeByKeyword(page, keyword);
+    dataArr.push(data);
   }
   await browser.close();
+  newsIncidentService.saveNewsReports(dataArr);
 }
 
 main(newsKeywords).catch((e) => {
@@ -51,8 +56,25 @@ async function scrapeByKeyword(page: Page, keyword: string) {
             title.includes(location),
           );
 
+          function getIncidentId(keyword) {
+            switch (keyword) {
+              case '傷人':
+                return 1;
+              case '非禮':
+                return 3;
+              case '盜竊':
+                return 5;
+              case '高空墮物':
+                return 6;
+              case '野豬':
+                return 7;
+              default:
+                console.log('Wrong keyword');
+            }
+          }
+
           return {
-            incidentType: keyword,
+            incidentType: getIncidentId(keyword),
             title,
             website,
             source,
