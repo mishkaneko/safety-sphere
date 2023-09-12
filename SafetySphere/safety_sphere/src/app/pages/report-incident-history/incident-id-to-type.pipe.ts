@@ -15,10 +15,12 @@ export class IncidentIdToTypePipe implements PipeTransform {
       case 4:
         return '可疑人物';
       case 5:
-        return '高空墮物';
+        return '盜竊';
       case 6:
-        return '野生動物襲擊';
+        return '高空墮物';
       case 7:
+        return '野生動物襲擊';
+      case 8:
         return '其他事件類型';
       default:
         return '';

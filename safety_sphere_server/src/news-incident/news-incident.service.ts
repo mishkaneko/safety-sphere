@@ -1,48 +1,74 @@
 import { Injectable } from '@nestjs/common';
+import { GeocodingService } from './geocoding/geocoding.service';
 import { knex } from '../knex';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
 @Injectable()
 export class NewsIncidentService {
-  constructor() {}
+  constructor(private geocodingService: GeocodingService) {}
 
-  async saveNewsReport(newsReport) {
-    const { incidentType, location, title, source, summary, website } =
-      newsReport;
-    console.log('HI from service');
-
+  async saveNewsReports(dataArr) {
+    console.log('dataArr at news service: ', dataArr);
     try {
-      // Check if a record with the same title exists in the database
-      // const existingRecord = await knex('news_report')
-      //   .select('id')
-      //   .where('title', title)
-      //   .first();
+      const promises = dataArr.flatMap((newsCategory) =>
+        newsCategory.map((newsReport) => this.saveNewsReport(newsReport)),
+      );
 
-      // if (!existingRecord) {
-      await knex('news_report').insert({
-        incident_id: incidentType,
-        location: location,
-        title: title,
-        source: source,
-        summary: summary,
-        website: website,
-      });
-      return { message: 'News saved into db' };
-      // }
-      return { message: 'News already exists in db' };
+      await Promise.all(promises);
+
+      return { message: 'All news saved into db' };
     } catch (error) {
+      console.error('Geocoding request failed:', error.message);
       throw Error(error);
     }
   }
 
-  async saveNewsReports(dataArr) {
+  async saveNewsReport(newsReport) {
+    const { incidentType, locations, title, source, summary, website } =
+      newsReport;
+    let locationLat, locationLng;
+
+    // Get coordinates of news location
     try {
-      for (const newsReport of dataArr) {
-        await this.saveNewsReport(newsReport);
+      const geocodingResult =
+        await this.geocodingService.geocodeAddress(locations);
+      const { lat, lng } = geocodingResult.results[0]?.geometry?.location || {};
+      locationLat = lat;
+      locationLng = lng;
+    } catch (geocodingError) {
+      console.error('Geocoding error:', geocodingError.message);
+      throw new Error('Geocoding failed');
+    }
+
+    console.log('newsReport: ', newsReport);
+
+    try {
+      // Check if a record with the same title exists in the database
+      const existingRecord = await knex('news_report')
+        .select('id')
+        .where('title', title)
+        .first();
+
+      // Insert news into db
+      if (!existingRecord) {
+        await knex('news_report').insert({
+          incident_id: incidentType,
+          location: locations,
+          latitude: locationLat,
+          longitude: locationLng,
+          title: title,
+          source: source,
+          summary: summary,
+          website: website,
+        });
+        console.log('News saved into db');
+        return { message: 'News saved into db' };
       }
-      return { message: 'All news saved into db' };
+      console.log('News already exists in db');
+      return { message: 'News already exists in db' };
     } catch (error) {
+      console.error('Error saving news report:', error.message);
       throw Error(error);
     }
   }

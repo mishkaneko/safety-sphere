@@ -20,4 +20,11 @@ export class ApiService {
 
     return this.http.get(apiUrl);
   }
+
+  updateServerData(data: any, path: string) {
+    const apiUrl = `http://localhost:5000${path}`;
+    // Sends put request to server
+    console.log('service:', data);
+    return this.http.put(apiUrl, data);
+  }
 }

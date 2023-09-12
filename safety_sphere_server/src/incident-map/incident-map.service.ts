@@ -25,4 +25,26 @@ export class IncidentMapService {
       throw Error(error);
     }
   }
+
+  async getNewsReport() {
+    try {
+      const newsReport = await knex
+        .select(
+          'incident_type.incident',
+          'news_report.location',
+          'news_report.latitude',
+          'news_report.longitude',
+          'news_report.title',
+          'news_report.source',
+          'news_report.summary',
+          'news_report.website',
+        )
+        .from('news_report')
+        .join('incident_type', 'incident_type.id', 'news_report.incident_id')
+        .where('news_report.latitude', '>', 0);
+      return newsReport;
+    } catch (error) {
+      throw Error(error);
+    }
+  }
 }

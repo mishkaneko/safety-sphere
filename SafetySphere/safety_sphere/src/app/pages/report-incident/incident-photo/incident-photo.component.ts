@@ -11,8 +11,8 @@ export class IncidentPhotoComponent {
   @ViewChild('canvas', { static: true }) canvas!: ElementRef;
   private ctx!: CanvasRenderingContext2D;
 
-  // selectedImages: string[] = [];
-  selectedImages: any;
+  selectedImages: string[] = [];
+  // selectedImages: any;
   isReviewBtnDisabled = true;
 
   constructor(private nzImageService: NzImageService) {}
@@ -72,15 +72,10 @@ export class IncidentPhotoComponent {
     this.checkImgAvailability();
   }
 
-  // Resize image using HTML5 Canvas API
   onImageSelected(imageFormat: string, imageBlob: Blob) {
-    // Create a new FileReader obj ro read the img file
     const reader: FileReader = new FileReader();
-    // Define event handler for when the FileReader finishes reading
     reader.onload = (e: any) => {
-      // Creates img obj
       const image = new Image();
-      // Define event handler for when the FileReader finishes loading
       image.onload = () => {
         const maxWidth: number = 207;
         let width = image.width;
@@ -91,30 +86,23 @@ export class IncidentPhotoComponent {
           width = maxWidth;
         }
 
-        // Get reference to HTMLCanvasElement from DOM
         const canvasElement: HTMLCanvasElement = this.canvas.nativeElement;
-        // Get 2D drawing context from canvas
         this.ctx = canvasElement.getContext('2d') as CanvasRenderingContext2D;
-        // Set canvas dimensions to match resized image
         canvasElement.width = width;
         canvasElement.height = height;
-        // Draw the image onto the canvas with new dimensions
         this.ctx.drawImage(image, 0, 0, width, height);
 
-        // Convert canvas content to dataUrl
         const resizedImageData = canvasElement.toDataURL(
           `image/${imageFormat}`
         );
         console.log('resizedImageData');
         console.log(resizedImageData);
+        this.selectedImages.push(resizedImageData);
       };
 
-      // Set src of img obj to the dataUrl obtained from FileReader
       image.src = e.target.result;
-      this.selectedImages.push(e.target.result);
     };
 
-    // Read the img file as dataUrl, triggering 'load' event when done
     reader.readAsDataURL(imageBlob);
   }
 

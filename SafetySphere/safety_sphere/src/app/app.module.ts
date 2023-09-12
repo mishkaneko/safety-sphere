@@ -1,3 +1,4 @@
+import { EditIncidentComponent } from './pages/report-incident-history/edit-incident/edit-incident.component';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -24,6 +25,7 @@ import { GoogleMapsModule } from '@angular/google-maps';
 registerLocaleData(zh);
 
 @NgModule({
+  // Might create a shared module for IncidentPhotoComponent
   declarations: [AppComponent],
   imports: [
     BrowserModule,

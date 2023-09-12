@@ -26,7 +26,7 @@ export class ReportIncidentService {
     }
   }
 
-  private transformDto(dto: CreateIncidentReportDto) {
+  transformDto(dto: CreateIncidentReportDto) {
     dto.incidentType = this.transformIncidentType(dto.incidentType);
     dto.date = this.transformDate(dto.date);
     dto.time = this.transformTime(dto.time);

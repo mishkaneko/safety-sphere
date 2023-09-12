@@ -1,7 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { ApiService } from 'src/app/@services/api.service';
 
 interface ReportRecordList {
+  id: number;
   incident_id: number;
   date: string;
   time: string;
@@ -18,7 +20,7 @@ interface ReportRecordList {
 export class ReportIncidentHistoryComponent {
   reportRecordList: ReportRecordList[] = [];
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService, private router: Router) {}
   ngOnInit(): void {
     this.apiService
       .getDataFromServer('/report-incident-history/report-record')
@@ -31,5 +33,9 @@ export class ReportIncidentHistoryComponent {
           console.error('Error fetching data:', error);
         },
       });
+  }
+
+  editIncident(recordId: number) {
+    this.router.navigate(['/report-incident-history/edit-incident', recordId]);
   }
 }

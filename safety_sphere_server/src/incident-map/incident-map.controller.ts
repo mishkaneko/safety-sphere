@@ -8,4 +8,8 @@ export class IncidentMapController {
   getUserReport() {
     return this.incidentMapService.getUserReport();
   }
+  @Get('news-report')
+  getNewsReport() {
+    return this.incidentMapService.getNewsReport();
+  }
 }

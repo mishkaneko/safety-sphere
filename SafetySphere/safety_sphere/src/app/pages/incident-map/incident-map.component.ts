@@ -15,6 +15,17 @@ interface UserReport {
   images: string[];
 }
 
+interface NewsReport {
+  incident: string;
+  location: string;
+  latitude: string;
+  longitude: string;
+  title: string;
+  source: string;
+  summary: string;
+  website: string;
+}
+
 @Component({
   selector: 'app-incident-map',
   templateUrl: './incident-map.component.html',
@@ -22,6 +33,7 @@ interface UserReport {
 })
 export class IncidentMapComponent implements AfterViewInit {
   userReportList: UserReport[] = [];
+  newsReportList: NewsReport[] = [];
 
   constructor(private apiService: ApiService) {}
 
@@ -53,7 +65,18 @@ export class IncidentMapComponent implements AfterViewInit {
     this.getUserReport().subscribe(
       (data: UserReport[]) => {
         this.userReportList = data;
-        this.createMarkers(map);
+        this.createMarkersForUserReport(map, this.userReportList);
+      },
+      (error: any) => {
+        console.error('Error fetching data: ', error);
+      }
+    );
+
+    this.getNewsReport().subscribe(
+      (data: NewsReport[]) => {
+        this.newsReportList = data;
+        console.log('incident-map-component: ', data);
+        this.createMarkersForNewsReport(map, this.newsReportList);
       },
       (error: any) => {
         console.error('Error fetching data: ', error);
@@ -69,28 +92,45 @@ export class IncidentMapComponent implements AfterViewInit {
     return this.apiService.getDataFromServer('/incident-map/news-report');
   }
 
-  private createMarkers(map: google.maps.Map) {
-    for (const userReport of this.userReportList) {
-      console.log(userReport);
-
+  private createMarkersForUserReport(map: google.maps.Map, list: any[]) {
+    for (const report of list) {
       const advancedMarkerElement =
         new google.maps.marker.AdvancedMarkerElement({
           map,
-          content: this.buildContent(userReport),
+          content: this.buildContentForUserReport(report),
           position: {
-            lat: parseFloat(userReport.latitude),
-            lng: parseFloat(userReport.longitude),
+            lat: parseFloat(report.latitude),
+            lng: parseFloat(report.longitude),
           },
-          title: userReport.description,
+          title: 'title',
         });
 
       advancedMarkerElement.addListener('click', () => {
-        this.toggleHighlight(advancedMarkerElement, userReport);
+        this.toggleHighlight(advancedMarkerElement);
       });
     }
   }
 
-  toggleHighlight(markerView: any, userReport: any) {
+  private createMarkersForNewsReport(map: google.maps.Map, list: any[]) {
+    for (const report of list) {
+      const advancedMarkerElement =
+        new google.maps.marker.AdvancedMarkerElement({
+          map,
+          content: this.buildContentForNewsReport(report),
+          position: {
+            lat: parseFloat(report.latitude),
+            lng: parseFloat(report.longitude),
+          },
+          title: 'title',
+        });
+
+      advancedMarkerElement.addListener('click', () => {
+        this.toggleHighlight(advancedMarkerElement);
+      });
+    }
+  }
+
+  toggleHighlight(markerView: any) {
     if (markerView.content.classList.contains('highlight')) {
       markerView.content.classList.remove('highlight');
       markerView.zIndex = null;
@@ -100,35 +140,14 @@ export class IncidentMapComponent implements AfterViewInit {
     }
   }
 
-  buildContent(userReport: UserReport) {
-    function getIconClass(incident: string): string {
-      switch (incident) {
-        case '肢體襲擊':
-          return 'fa-solid fa-hand-fist fa-xl';
-        case '言語威脅':
-          return 'fa-solid fa-person-harassing  fa-xl';
-        case '非禮/性侵犯':
-          return 'fa-solid fa-mars-and-venus-burst  fa-xl';
-        case '可疑人物':
-          return 'fa-solid fa-person-circle-question  fa-xl';
-        case '盜竊':
-          return 'fa-solid fa-people-robbery  fa-xl';
-        case '高空墮物':
-          return 'fa-solid fa-person-falling-burst  fa-xl';
-        case '野生動物襲擊':
-          return 'fa-solid fa-paw  fa-xl';
-        default:
-          return '';
-      }
-    }
+  buildContentForUserReport(userReport: UserReport) {
     const content = document.createElement('div');
-    // content.classList.add('user-report');
     content.classList.add('user-report');
     content.innerHTML =
       /*html*/
       `
         <div class="icon">
-          <i aria-hidden="true" class="${getIconClass(
+          <i aria-hidden="true" class="${this.getIconClass(
             userReport.incident
           )}" title="${userReport.incident}"></i>
       </div>
@@ -147,5 +166,61 @@ export class IncidentMapComponent implements AfterViewInit {
       </div>`;
 
     return content;
+  }
+
+  buildContentForNewsReport(newsReport: NewsReport) {
+    const content = document.createElement('div');
+    // change here for css
+    content.classList.add('user-report');
+    content.innerHTML =
+      /*html*/
+      `
+        <div class="icon">
+          <i aria-hidden="true" class="${this.getIconClass(
+            newsReport.incident
+          )}" title="${newsReport.incident}"></i>
+      </div>
+      <div class="details">
+          <div class="incident-type">${newsReport.incident}</div>
+          <div class="location">
+          <span class="details-icon"><i class="fa-solid fa-location-dot"></i></span>
+          <span>${newsReport.location}</span>
+         </div>
+         <div class="title"> <span class="details-icon"><i class="fa-solid fa-newspaper"></i></span><span>${
+           newsReport.title
+         }</span></div>
+          <div class="source"><span class="details-icon"><i class="fa-solid fa-clock"></i></span><span>${
+            newsReport.source
+          }</span></div>
+          <div class="summary"> <span class="details-icon"><i class="fa-solid fa-info"></i></span><span>${
+            newsReport.summary
+          }</span></div>
+          <div class="website"> <span class="details-icon"><i class="fa-solid fa-link"></i></i></span><a>${
+            newsReport.website
+          }</a></div>
+      </div>`;
+
+    return content;
+  }
+
+  getIconClass(incident: string): string {
+    switch (incident) {
+      case '肢體襲擊':
+        return 'fa-solid fa-hand-fist fa-xl';
+      case '言語威脅':
+        return 'fa-solid fa-person-harassing  fa-xl';
+      case '非禮/性侵犯':
+        return 'fa-solid fa-mars-and-venus-burst  fa-xl';
+      case '可疑人物':
+        return 'fa-solid fa-person-circle-question  fa-xl';
+      case '盜竊':
+        return 'fa-solid fa-people-robbery  fa-xl';
+      case '高空墮物':
+        return 'fa-solid fa-person-falling-burst  fa-xl';
+      case '野生動物襲擊':
+        return 'fa-solid fa-paw  fa-xl';
+      default:
+        return '';
+    }
   }
 }

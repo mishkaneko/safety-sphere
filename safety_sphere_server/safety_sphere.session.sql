@@ -1,2 +1,2 @@
 select *
-from news_report
+from user_report

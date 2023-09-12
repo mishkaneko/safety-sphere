@@ -14,6 +14,11 @@ import { ReportIncidentRoutingModule } from './report-incident-routing.module';
 import { IncidentPhotoComponent } from './incident-photo/incident-photo.component';
 
 @NgModule({
+  declarations: [
+    ReportIncidentComponent,
+    GoogleSearchComponent,
+    IncidentPhotoComponent,
+  ],
   imports: [
     CommonModule,
     NzFormModule,
@@ -26,11 +31,6 @@ import { IncidentPhotoComponent } from './incident-photo/incident-photo.componen
     ReactiveFormsModule,
     ReportIncidentRoutingModule,
   ],
-  declarations: [
-    ReportIncidentComponent,
-    GoogleSearchComponent,
-    IncidentPhotoComponent,
-  ],
-  exports: [ReportIncidentComponent],
+  exports: [GoogleSearchComponent, IncidentPhotoComponent],
 })
 export class ReportIncidentModule {}

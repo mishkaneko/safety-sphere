@@ -1,12 +1,11 @@
 import { Browser, Page, chromium } from 'playwright';
 import { listOfHKLocations } from './list-of-hk-locations';
-import { NewsIncidentService } from './news-incident.service';
 
 const newsKeywords = ['傷人', '非禮', '盜竊', '高空墮物', '野豬'];
-const newsIncidentService = new NewsIncidentService();
+
 let dataArr = [];
 
-async function main(newsKeywords: string[]) {
+export async function scrapNewsData(newsKeywords: string[]) {
   const browser: Browser = await chromium.launch({ headless: false });
   const page: Page = await browser.newPage();
   await page.goto('https://hk.news.yahoo.com/hong-kong/', {
@@ -17,10 +16,10 @@ async function main(newsKeywords: string[]) {
     dataArr.push(data);
   }
   await browser.close();
-  newsIncidentService.saveNewsReports(dataArr);
+  return dataArr;
 }
 
-main(newsKeywords).catch((e) => {
+scrapNewsData(newsKeywords).catch((e) => {
   console.error(e);
 });
 
@@ -54,7 +53,7 @@ async function scrapeByKeyword(page: Page, keyword: string) {
           );
           const locations = listOfHKLocations.filter((location) =>
             title.includes(location),
-          );
+          )[0];
 
           function getIncidentId(keyword) {
             switch (keyword) {
@@ -89,8 +88,7 @@ async function scrapeByKeyword(page: Page, keyword: string) {
   );
 
   // Skip news without location
-  items = items.filter((item) => item.locations.length > 0);
-  console.log('items:', items);
+  items = items.filter((item) => item.locations !== undefined);
 
   return items;
 }

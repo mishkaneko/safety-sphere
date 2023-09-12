@@ -5,11 +5,17 @@ import { ReportIncidentModule } from './report-incident/report-incident.module';
 import { UserProfileModule } from './user-profile/user-profile.module';
 import { ReportIncidentHistoryModule } from './report-incident-history/report-incident-history.module';
 import { IncidentMapModule } from './incident-map/incident-map.module';
-import { NewsIncidentService } from './news-incident/news-incident.service';
+import { NewsIncidentModule } from './news-incident/news-incident.module';
 
 @Module({
-  imports: [ReportIncidentModule, UserProfileModule, ReportIncidentHistoryModule, IncidentMapModule],
+  imports: [
+    ReportIncidentModule,
+    UserProfileModule,
+    ReportIncidentHistoryModule,
+    IncidentMapModule,
+    NewsIncidentModule,
+  ],
   controllers: [AppController],
-  providers: [AppService, NewsIncidentService],
+  providers: [AppService],
 })
 export class AppModule {}
