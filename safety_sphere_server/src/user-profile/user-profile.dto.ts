@@ -2,23 +2,23 @@ import { IsString, IsObject } from 'class-validator';
 
 export class CreateProfileInformationDto {
   @IsString()
-  userName: string;
+  user_name: string;
 
   @IsString()
-  userPhone: string;
+  user_phone: string;
 
   @IsString()
   notes: string;
 
   @IsString()
-  emergName: string;
+  emerg_name: string;
 
   @IsString()
-  emergRelation: string;
+  emerg_relation: string;
 
   @IsString()
-  emergPhone: string;
+  emerg_phone: string;
 
   @IsString()
-  emergAddress: string;
+  emerg_address: string;
 }

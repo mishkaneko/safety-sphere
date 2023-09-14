@@ -9,6 +9,7 @@ export class IncidentMapService {
     try {
       const userReport = await knex
         .select(
+          'user_report.id',
           'incident_type.incident',
           'user_report.date',
           'user_report.time',
@@ -16,10 +17,27 @@ export class IncidentMapService {
           'user_report.latitude',
           'user_report.longitude',
           'user_report.description',
-          'user_report.images',
         )
+        .select(knex.raw('ARRAY_AGG(image.image_string) AS image_array'))
         .from('user_report')
-        .join('incident_type', 'incident_type.id', 'user_report.incident_id');
+        .leftJoin('image', 'user_report.id', 'image.user_report_id')
+        .leftJoin(
+          'incident_type',
+          'user_report.incident_id',
+          'incident_type.id',
+        )
+        .where('user_report.user_id', '1')
+        .groupBy(
+          'user_report.id',
+          'user_report.incident_id',
+          'user_report.date',
+          'user_report.time',
+          'user_report.location',
+          'user_report.latitude',
+          'user_report.longitude',
+          'user_report.description',
+          'incident_type.incident',
+        );
       return userReport;
     } catch (error) {
       throw Error(error);

@@ -2,9 +2,7 @@
   <h1>我的報告記錄</h1>
   <nz-list nzItemLayout="horizontal">
     <nz-list-item *ngFor="let record of reportRecordList">
-      <nz-list-item-meta
-        [nzDescription]="record.incident_id | incidentIdToType"
-      >
+      <nz-list-item-meta [nzDescription]="record.incident">
         <nz-list-item-meta-title>
           <div class="history-item">日期: {{ record.date }}</div>
           <div class="history-item">時間: {{ record.time }}</div>
@@ -12,7 +10,7 @@
           <div class="history-item">事發經過: {{ record.description }}</div>
           <div class="history-item">
             <incident-photo-history
-              [images]="record.images"
+              [image_array]="record.image_array"
             ></incident-photo-history>
             <div class="history-item">
               <button

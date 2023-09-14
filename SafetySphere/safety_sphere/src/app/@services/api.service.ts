@@ -7,21 +7,19 @@ import { HttpClient } from '@angular/common/http';
 export class ApiService {
   constructor(private http: HttpClient) {}
 
-  sendDataToServer(data: any, path: string) {
+  post(data: any, path: string) {
     const apiUrl = `http://localhost:5000${path}`;
     // Sends post request to server
     console.log('service:', data);
     return this.http.post(apiUrl, data);
   }
 
-  getDataFromServer(path: string) {
+  get<T>(path: string) {
     const apiUrl = `http://localhost:5000${path}`;
-    console.log('service for getting: ', this.http.get(apiUrl));
-
-    return this.http.get(apiUrl);
+    return this.http.get<T>(apiUrl);
   }
 
-  updateServerData(data: any, path: string) {
+  put(data: any, path: string) {
     const apiUrl = `http://localhost:5000${path}`;
     // Sends put request to server
     console.log('service:', data);

@@ -1,13 +1,13 @@
-import { IsString, IsObject, IsArray } from 'class-validator';
+import { IsString, IsObject, IsArray, IsDateString } from 'class-validator';
 
 export class CreateIncidentReportDto {
   @IsString()
   incidentType: string;
 
-  @IsString()
+  @IsDateString()
   date: string;
 
-  @IsString()
+  @IsDateString()
   time: string;
 
   @IsString()
@@ -17,8 +17,8 @@ export class CreateIncidentReportDto {
   coordinates: { lat: number; lng: number };
 
   @IsString()
-  incidentDetails: string;
+  description: string;
 
   @IsArray()
-  images: string;
+  image: string;
 }

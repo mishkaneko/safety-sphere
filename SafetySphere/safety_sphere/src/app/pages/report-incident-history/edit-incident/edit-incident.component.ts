@@ -39,7 +39,7 @@ export class EditIncidentComponent {
       this.url = `/report-incident-history/edit-incident/${this.id}`;
 
       // Use id to fetch incident information
-      this.apiService.getDataFromServer(this.url).subscribe({
+      this.apiService.get(this.url).subscribe({
         next: (response) => {
           console.log('Success:', response);
           this.incidentData = response;
@@ -94,7 +94,7 @@ export class EditIncidentComponent {
     console.log('report-incident-component: ', formObj);
 
     // Send data to service
-    this.apiService.updateServerData(formObj, this.url).subscribe({
+    this.apiService.put(formObj, this.url).subscribe({
       next: (response) => {
         console.log('Success:', response);
       },

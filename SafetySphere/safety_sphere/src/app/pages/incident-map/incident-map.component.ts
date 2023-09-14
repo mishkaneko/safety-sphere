@@ -85,11 +85,11 @@ export class IncidentMapComponent implements AfterViewInit {
   }
 
   private getUserReport(): any {
-    return this.apiService.getDataFromServer('/incident-map/user-report');
+    return this.apiService.get('/incident-map/user-report');
   }
 
   private getNewsReport(): any {
-    return this.apiService.getDataFromServer('/incident-map/news-report');
+    return this.apiService.get('/incident-map/news-report');
   }
 
   private createMarkersForUserReport(map: google.maps.Map, list: any[]) {

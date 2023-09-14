@@ -10,18 +10,33 @@ export class ReportIncidentHistoryService {
     try {
       const reportRecord = await knex
         .select(
-          'id',
-          'incident_id',
-          'date',
-          'time',
-          'location',
-          'description',
-          'images',
+          'user_report.id',
+          'incident_type.incident',
+          'user_report.date',
+          'user_report.time',
+          'user_report.location',
+          'user_report.description',
+          knex.raw('ARRAY_AGG(image.image_string) AS image_array'),
         )
         .from('user_report')
-        // Change user_id accordingly
-        .where('user_id', '1')
-        .orderBy('date', 'desc');
+        .leftJoin('image', 'user_report.id', 'image.user_report_id')
+        .where('user_report.user_id', '1')
+        .leftJoin(
+          'incident_type',
+          'user_report.incident_id',
+          'incident_type.id',
+        )
+        .groupBy(
+          'user_report.id',
+          'user_report.incident_id',
+          'user_report.date',
+          'user_report.time',
+          'user_report.location',
+          'user_report.description',
+          'incident_type.incident',
+        )
+        .orderBy('user_report.date', 'desc')
+        .orderBy('user_report.time', 'desc');
       console.log('server service:', reportRecord);
       return reportRecord;
     } catch (error) {
@@ -33,17 +48,33 @@ export class ReportIncidentHistoryService {
     try {
       const reportRecord = await knex
         .select(
-          'id',
-          'incident_id',
-          'date',
-          'time',
-          'location',
-          'description',
-          'images',
+          'user_report.id',
+          'incident_type.incident',
+          'user_report.date',
+          'user_report.time',
+          'user_report.location',
+          'user_report.description',
+          knex.raw('ARRAY_AGG(image.image_string) AS image_array'),
         )
         .from('user_report')
-        .where('id', id)
-        .orderBy('date', 'desc');
+        .leftJoin('image', 'user_report.id', 'image.user_report_id')
+        .where('user_report.user_id', '1')
+        .leftJoin(
+          'incident_type',
+          'user_report.incident_id',
+          'incident_type.id',
+        )
+        .where('user_report.id', id)
+        .groupBy(
+          'user_report.id',
+          'user_report.incident_id',
+          'user_report.date',
+          'user_report.time',
+          'user_report.location',
+          'user_report.description',
+          'incident_type.incident',
+        )
+        .first();
       console.log('server service:', reportRecord);
       return reportRecord;
     } catch (error) {
@@ -54,8 +85,9 @@ export class ReportIncidentHistoryService {
   async updateSpecificReportRecord(dto: CreateIncidentReportDto, id: number) {
     const transformedDto = this.transformDto(dto);
     try {
-      const reportRecord = await knex('user_report')
+      await knex('user_report')
         .update({
+          // change user_id
           user_id: '1',
           incident_id: dto.incidentType,
           date: dto.date,
@@ -63,64 +95,46 @@ export class ReportIncidentHistoryService {
           location: dto.location,
           latitude: dto.coordinates.lat,
           longitude: dto.coordinates.lng,
-          description: dto.incidentDetails,
-          images: dto.images,
+          description: dto.description,
         })
         .where('id', id);
-      console.log('server service:', reportRecord);
-      return reportRecord;
+
+      await knex('image').delete().where('user_report_id', id);
+
+      for (const image of dto.image) {
+        await knex('image').insert({
+          user_report_id: id,
+          image_string: image,
+        });
+      }
+
+      return { message: 'successfully updated report record' };
     } catch (error) {
       throw Error(error);
     }
   }
   transformDto(dto: CreateIncidentReportDto) {
     dto.incidentType = this.transformIncidentType(dto.incidentType);
-    dto.date = this.transformDate(dto.date);
-    dto.time = this.transformTime(dto.time);
     return dto;
   }
   private transformIncidentType(incidentType: string) {
     switch (incidentType) {
-      case 'physicalAssault':
+      case '肢體襲擊':
         return '1';
-      case 'verbalThreat':
+      case '言語威脅':
         return '2';
-      case 'sexualAssault':
+      case '非禮/性侵犯':
         return '3';
-      case 'suspiciousIndividuals':
+      case '可疑人物':
         return '4';
-      case 'theft':
+      case '盜竊':
         return '5';
-      case 'fallingFromHeights':
+      case '高空墮物':
         return '6';
-      case 'animalEncounters':
+      case '野生動物襲擊':
         return '7';
-      case 'otherIncidentTypes':
+      case '其他':
         return '8';
     }
-  }
-  private transformDate(date: string) {
-    // let transformedDate = date.match(/(\w{3}) (\d{2}) (\d{4})/);
-    let transformedDate = date.match(/^(\d{4}-\d{2}-\d{2})/);
-    // const month = transformedDate[1];
-    // const day = transformedDate[2];
-    // const year = transformedDate[3];
-    // const parsedDate = new Date(`${year}-${month}-${day}`);
-
-    // Format the date in yyyy/mm/dd format
-    // const formattedDate = parsedDate
-    //   .toLocaleDateString('en-UK', {
-    //     year: 'numeric',
-    //     month: '2-digit',
-    //     day: '2-digit',
-    //   })
-    //   .replace(/\//g, '-');
-    // return formattedDate;
-    return transformedDate[0];
-  }
-
-  private transformTime(time: string) {
-    let formattedTime = time.match(/(\d{2}:\d{2})/)[0];
-    return formattedTime;
   }
 }

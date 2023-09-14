@@ -10,8 +10,6 @@ export class ScraperProvider {
 
   constructor(private readonly newsIncidentService: NewsIncidentService) {}
   async scrapeAndSaveNewsData() {
-    console.log('11111111');
-
     const scrapNewsData = async (newsKeywords: string[]) => {
       const browser: Browser = await chromium.launch({ headless: false });
       const page: Page = await browser.newPage();
@@ -22,7 +20,6 @@ export class ScraperProvider {
         let data = await scrapeByKeyword(page, keyword);
         this.dataArr.push(data);
       }
-      console.log('22222222222222');
       await browser.close();
       await this.newsIncidentService.saveNewsReports(this.dataArr);
     };
@@ -32,7 +29,6 @@ export class ScraperProvider {
     });
 
     async function scrapeByKeyword(page: Page, keyword: string) {
-      console.log('333333333333333');
       await page.getByLabel('搜尋查詢').fill(keyword);
       await page.evaluate(() => {
         document
@@ -101,7 +97,6 @@ export class ScraperProvider {
 
       return items;
     }
-    console.log('444444444444444444');
     // Call the NewsIncidentService to save data
     console.log('this.dataArr at provider: ', this.dataArr);
   }

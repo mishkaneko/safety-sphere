@@ -9,7 +9,6 @@ export class NewsIncidentService {
   constructor(private geocodingService: GeocodingService) {}
 
   async saveNewsReports(dataArr) {
-    console.log('dataArr at news service: ', dataArr);
     try {
       const promises = dataArr.flatMap((newsCategory) =>
         newsCategory.map((newsReport) => this.saveNewsReport(newsReport)),
@@ -40,8 +39,6 @@ export class NewsIncidentService {
       console.error('Geocoding error:', geocodingError.message);
       throw new Error('Geocoding failed');
     }
-
-    console.log('newsReport: ', newsReport);
 
     try {
       // Check if a record with the same title exists in the database

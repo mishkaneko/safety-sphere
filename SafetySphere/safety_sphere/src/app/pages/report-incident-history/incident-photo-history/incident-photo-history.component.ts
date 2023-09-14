@@ -8,12 +8,12 @@ import { NzImageService } from 'ng-zorro-antd/image';
 })
 export class IncidentPhotoHistoryComponent {
   isReviewBtnDisabled = true;
-  @Input() images: string[] = [];
+  @Input() image_array: string[] = [];
 
   constructor(private nzImageService: NzImageService) {}
 
   onClickReview() {
-    let images = this.images.map((nzImg) => {
+    let images = this.image_array.map((nzImg) => {
       return { src: `${nzImg.toString()}` };
     });
     this.nzImageService.preview(images, { nzZoom: 1.5, nzRotate: 0 });

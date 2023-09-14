@@ -9,9 +9,7 @@ import { Component } from '@angular/core';
 export class AppComponent {
   isCollapsed = true;
 
-  constructor() {
-    console.log('app');
-  }
+  constructor() {}
 
   closeSideMenu = () => {
     this.isCollapsed = true;

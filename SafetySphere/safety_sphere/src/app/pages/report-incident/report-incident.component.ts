@@ -35,7 +35,7 @@ export class ReportIncidentComponent {
       incidentType: ['', [Validators.required]],
       datePicker: [null, [Validators.required]],
       timePicker: [null, [Validators.required]],
-      incidentDetails: ['', [Validators.required]],
+      description: ['', [Validators.required]],
     });
   }
 
@@ -46,16 +46,17 @@ export class ReportIncidentComponent {
     const time = this.validateForm.get('timePicker')!.value;
     const location = this.googleSearchComponent.location;
     const coordinates = this.googleSearchComponent.coordinates;
-    const incidentDetails = this.validateForm.get('incidentDetails')!.value;
-    const images = this.incidentPhotoComponent.selectedImages;
+    const description = this.validateForm.get('description')!.value;
+    const image = this.incidentPhotoComponent.selectedImages;
+
     const formObj = {
       incidentType,
       date,
       time,
       location,
       coordinates,
-      incidentDetails,
-      images,
+      description,
+      image
     };
 
     // Create a custom MatSnackBarConfig
@@ -72,17 +73,15 @@ export class ReportIncidentComponent {
     console.log('report-incident-component: ', formObj);
 
     // Send data to service
-    this.apiService
-      .sendDataToServer(formObj, '/report-incident/user-report')
-      .subscribe({
-        next: (response) => {
-          console.log('Success:', response);
-          // Display a snackbar on success
-          this.snackBar.open('成功遞交報告', '關閉', snackBarConfig);
-        },
-        error: (error) => {
-          console.error('Error:', error);
-        },
-      });
+    this.apiService.post(formObj, '/report-incident/user-report').subscribe({
+      next: (response) => {
+        console.log('Success:', response);
+        // Display a snackbar on success
+        this.snackBar.open('成功遞交報告', '關閉', snackBarConfig);
+      },
+      error: (error) => {
+        console.error('Error:', error);
+      },
+    });
   }
 }

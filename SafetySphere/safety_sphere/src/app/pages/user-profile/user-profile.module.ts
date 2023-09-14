@@ -1,8 +1,7 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-
-import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzSelectModule } from 'ng-zorro-antd/select';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 import { UserProfileRoutingModule } from './user-profile-routing.module';
 import { UserProfileComponent } from './user-profile.component';
@@ -10,15 +9,13 @@ import { UserProfileComponent } from './user-profile.component';
 @NgModule({
   imports: [
     UserProfileRoutingModule,
-    NzFormModule,
     NzSelectModule,
-    ReactiveFormsModule,
+    FormsModule,
+    CommonModule,
   ],
   declarations: [UserProfileComponent],
   exports: [UserProfileComponent],
 })
 export class UserProfileModule {
-  constructor() {
-    console.log('HI from upm');
-  }
+  constructor() {}
 }

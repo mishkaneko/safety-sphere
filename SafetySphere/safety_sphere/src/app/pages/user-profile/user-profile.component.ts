@@ -1,10 +1,6 @@
 import { ApiService } from 'src/app/@services/api.service';
 import { Component } from '@angular/core';
-import {
-  UntypedFormBuilder,
-  UntypedFormGroup,
-  Validators,
-} from '@angular/forms';
+import { UserProfile, UserService } from 'src/app/user.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -12,59 +8,46 @@ import {
   styleUrls: ['./user-profile.component.scss'],
 })
 export class UserProfileComponent {
-  userProfileForm!: UntypedFormGroup;
+  userProfileInformation?: UserProfile;
 
-  constructor(private fb: UntypedFormBuilder, private apiService: ApiService) {
-    console.log('FROM USER PROFILE COMPONENT');
+  constructor(
+    private apiService: ApiService,
+    private userService: UserService
+  ) {}
+
+  ngOnInit() {
+    this.getUserProfile();
   }
 
-  ngOnInit(): void {
-    // Initializes the form controls in the constructor
-    this.userProfileForm = this.fb.group({
-      userName: ['', [Validators.required]],
-      userPhone: ['', [Validators.required]],
-      notes: [''],
-      emergName: ['', [Validators.required]],
-      emergRelation: ['', [Validators.required]],
-      emergPhone: ['', [Validators.required]],
-      emergAddress: ['', [Validators.required]],
+  getUserProfile() {
+    // Might have to pass user_id here?
+    this.userService.getProfile().subscribe({
+      next: (json) => {
+        this.userProfileInformation = json.profile;
+        console.log(this.userProfileInformation);
+      },
+      error: (error) => {
+        console.error('Error:', error);
+      },
     });
   }
 
   // Fn for submit btn
   onSubmit() {
-    // Access form values using the FormGroup
-    const userName = this.userProfileForm.get('userName')!.value;
-    const userPhone = this.userProfileForm.get('userPhone')!.value;
-    const notes = this.userProfileForm.get('notes')!.value;
-    const emergName = this.userProfileForm.get('emergName')!.value;
-    const emergRelation = this.userProfileForm.get('emergRelation')!.value;
-    const emergPhone = this.userProfileForm.get('emergPhone')!.value;
-    const emergAddress = this.userProfileForm.get('emergAddress')!.value;
-    const formObj = {
-      userName,
-      userPhone,
-      notes,
-      emergName,
-      emergRelation,
-      emergPhone,
-      emergAddress,
-    };
+    if (this.userProfileInformation) {
+      console.log(this.userProfileInformation);
 
-    // Clears form
-    this.userProfileForm.reset();
-    console.log(formObj);
-
-    // Sends data to server
-    this.apiService
-      .sendDataToServer(formObj, '/user-profile/user-information')
-      .subscribe({
-        next: (response) => {
-          console.log('Success:', response);
-        },
-        error: (error) => {
-          console.error('Error:', error);
-        },
-      });
+      // Sends data to server
+      this.apiService
+        .put(this.userProfileInformation, '/user-profile')
+        .subscribe({
+          next: (response) => {
+            console.log('Success:', response);
+          },
+          error: (error) => {
+            console.error('Error:', error);
+          },
+        });
+    }
   }
 }

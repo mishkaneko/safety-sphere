@@ -48,8 +48,6 @@ export class GoogleSearchComponent {
           lng: place.geometry.location?.lng(),
         };
 
-        console.log(place);
-
         // Verifies result for location
         if (
           place.formatted_address === undefined ||

@@ -4,78 +4,73 @@ import { knex } from '../knex';
 
 @Injectable()
 export class ReportIncidentService {
+  // dateNumber;
+  // timeNumber;
   constructor() {}
 
   async postIncidentReport(dto: CreateIncidentReportDto) {
-    const transformedDto = this.transformDto(dto);
+    const transformedDto = this.transformData(dto);
+
     try {
-      await knex('user_report').insert({
-        user_id: '1',
-        incident_id: dto.incidentType,
-        date: dto.date,
-        time: dto.time,
-        location: dto.location,
-        latitude: dto.coordinates.lat,
-        longitude: dto.coordinates.lng,
-        description: dto.incidentDetails,
-        images: dto.images,
-      });
-      return { message: `Incident report saved into db` };
+      const [userReportId] = await knex('user_report')
+        .insert({
+          user_id: '1',
+          incident_id: dto.incidentType,
+          date: dto.date,
+          time: dto.time,
+          location: dto.location,
+          latitude: dto.coordinates.lat,
+          longitude: dto.coordinates.lng,
+          description: dto.description,
+        })
+        .returning('id');
+      console.log(userReportId);
+
+      for (const image of dto.image) {
+        await knex('image').insert({
+          user_report_id: userReportId.id,
+          image_string: image,
+        });
+      }
+
+      return { message: 'successfully inserted user_report into db' };
     } catch (error) {
       throw Error(error);
     }
   }
 
-  transformDto(dto: CreateIncidentReportDto) {
+  transformData(dto: CreateIncidentReportDto) {
     dto.incidentType = this.transformIncidentType(dto.incidentType);
-    dto.date = this.transformDate(dto.date);
-    dto.time = this.transformTime(dto.time);
+    // this.dateNumber = this.transformDateAndTime(dto.date);
+    // this.timeNumber = this.transformDateAndTime(dto.time);
+    // console.log('this.dateNumber: ', this.dateNumber);
+    // console.log('typeof this.dateNumber: ', typeof this.dateNumber);
+
     return dto;
   }
 
   private transformIncidentType(incidentType: string) {
     switch (incidentType) {
-      case 'physicalAssault':
+      case '肢體襲擊':
         return '1';
-      case 'verbalThreat':
+      case '言語威脅':
         return '2';
-      case 'sexualAssault':
+      case '非禮/性侵犯':
         return '3';
-      case 'suspiciousIndividuals':
+      case '可疑人物':
         return '4';
-      case 'theft':
+      case '盜竊':
         return '5';
-      case 'fallingFromHeights':
+      case '高空墮物':
         return '6';
-      case 'animalEncounters':
+      case '野生動物襲擊':
         return '7';
-      case 'otherIncidentTypes':
+      case '其他':
         return '8';
     }
   }
 
-  private transformDate(date: string) {
-    // let transformedDate = date.match(/(\w{3}) (\d{2}) (\d{4})/);
-    let transformedDate = date.match(/^(\d{4}-\d{2}-\d{2})/);
-    // const month = transformedDate[1];
-    // const day = transformedDate[2];
-    // const year = transformedDate[3];
-    // const parsedDate = new Date(`${year}-${month}-${day}`);
-
-    // Format the date in yyyy/mm/dd format
-    // const formattedDate = parsedDate
-    //   .toLocaleDateString('en-UK', {
-    //     year: 'numeric',
-    //     month: '2-digit',
-    //     day: '2-digit',
-    //   })
-    //   .replace(/\//g, '-');
-    // return formattedDate;
-    return transformedDate[0];
-  }
-
-  private transformTime(time: string) {
-    let formattedTime = time.match(/(\d{2}:\d{2})/)[0];
-    return formattedTime;
-  }
+  // private transformDateAndTime(data) {
+  //   return Date.parse(data);
+  // }
 }

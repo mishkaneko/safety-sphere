@@ -4,12 +4,12 @@ import { ApiService } from 'src/app/@services/api.service';
 
 interface ReportRecordList {
   id: number;
-  incident_id: number;
+  incident: string;
   date: string;
   time: string;
   location: string;
   description: string;
-  images: string[];
+  image_array: any[];
 }
 
 @Component({
@@ -22,17 +22,16 @@ export class ReportIncidentHistoryComponent {
 
   constructor(private apiService: ApiService, private router: Router) {}
   ngOnInit(): void {
-    this.apiService
-      .getDataFromServer('/report-incident-history/report-record')
-      .subscribe({
-        next: (data: any) => {
-          console.log('component:', data);
-          this.reportRecordList = data;
-        },
-        error: (error) => {
-          console.error('Error fetching data:', error);
-        },
-      });
+    this.apiService.get('/report-incident-history/report-record').subscribe({
+      next: (data: any) => {
+        console.log('component:', data);
+        this.reportRecordList = data;
+        console.log('reportRecordList: ', this.reportRecordList);
+      },
+      error: (error) => {
+        console.error('Error fetching data:', error);
+      },
+    });
   }
 
   editIncident(recordId: number) {
