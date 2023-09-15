@@ -42,12 +42,36 @@ export class ReportIncidentComponent {
   onSubmit() {
     // // Access form values using the FormGroup
     const incidentType = this.validateForm.get('incidentType')!.value;
-    const date = this.validateForm.get('datePicker')!.value;
-    const time = this.validateForm.get('timePicker')!.value;
+    const date: Date = this.validateForm.get('datePicker')!.value;
+    const time: Date = this.validateForm.get('timePicker')!.value;
     const location = this.googleSearchComponent.location;
     const coordinates = this.googleSearchComponent.coordinates;
     const description = this.validateForm.get('description')!.value;
     const image = this.incidentPhotoComponent.selectedImages;
+
+    console.log('date:', this.validateForm.get('datePicker'));
+    console.log('date.value:', this.validateForm.get('datePicker')?.value);
+
+    console.log('time:', this.validateForm.get('timePicker'));
+    console.log('time.value:', this.validateForm.get('timePicker')?.value);
+
+    Object.assign(window, {
+      date: this.validateForm.get('datePicker')?.value,
+      time: this.validateForm.get('timePicker')?.value,
+    });
+
+    let timestamp = new Date();
+    timestamp.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
+    timestamp.setHours(
+      time.getHours(),
+      time.getMinutes(),
+      time.getSeconds(),
+      0
+    );
+
+    console.log('timestamp:', timestamp);
+    console.log('timestamp.isoString:', timestamp.toISOString());
+    console.log('timestamp.time:', timestamp.getTime());
 
     const formObj = {
       incidentType,
@@ -56,7 +80,7 @@ export class ReportIncidentComponent {
       location,
       coordinates,
       description,
-      image
+      image,
     };
 
     // Create a custom MatSnackBarConfig

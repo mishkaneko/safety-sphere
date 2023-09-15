@@ -4,8 +4,12 @@
     <nz-list-item *ngFor="let record of reportRecordList">
       <nz-list-item-meta [nzDescription]="record.incident">
         <nz-list-item-meta-title>
-          <div class="history-item">日期: {{ record.date }}</div>
-          <div class="history-item">時間: {{ record.time }}</div>
+          <div class="history-item">
+            日期: {{ record.date | dateTimeFormat : "date" }}
+          </div>
+          <div class="history-item">
+            時間: {{ record.time | dateTimeFormat : "time" }}
+          </div>
           <div class="history-item">地址: {{ record.location }}</div>
           <div class="history-item">事發經過: {{ record.description }}</div>
           <div class="history-item">

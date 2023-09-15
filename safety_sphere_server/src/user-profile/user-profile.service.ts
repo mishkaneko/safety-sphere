@@ -41,7 +41,7 @@ export class UserProfileService {
       if (!profile) {
         throw new NotFoundException('user not found');
       }
-      return { profile };
+      return profile;
     } catch (error) {
       throw Error(error);
     }

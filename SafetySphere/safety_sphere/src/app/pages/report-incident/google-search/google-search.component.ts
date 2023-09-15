@@ -1,3 +1,4 @@
+import { LocationHistoryService } from './../../../@services/location-history.service';
 import { Component, ElementRef, NgZone, ViewChild } from '@angular/core';
 import { GoogleMap } from '@angular/google-maps';
 
@@ -12,15 +13,19 @@ interface Coordinates {
   styleUrls: ['./google-search.component.scss'],
 })
 export class GoogleSearchComponent {
+
   @ViewChild('search')
   public searchElementRef!: ElementRef;
   @ViewChild(GoogleMap)
   public map!: GoogleMap;
 
   coordinates: Coordinates = { lat: undefined, lng: undefined };
-  location: string = '';
+  location: string = this.locationHistoryService.locationHistory;
 
-  constructor(private ngZone: NgZone) {}
+  constructor(
+    private ngZone: NgZone,
+    private locationHistoryService: LocationHistoryService
+  ) {}
 
   ngAfterViewInit(): void {
     // Binds autocomplete to search input control
@@ -35,6 +40,7 @@ export class GoogleSearchComponent {
 
     autocomplete.addListener('place_changed', () => {
       this.ngZone.run(() => {
+
         // Gets place result
         let place: google.maps.places.PlaceResult = autocomplete.getPlace();
 
@@ -57,7 +63,7 @@ export class GoogleSearchComponent {
         }
 
         // Extract the location name (the user-entered input)
-        this.location = `${place.name}, ${place.vicinity}`;
+        this.location = `${place.name}, ${place.formatted_address}`;
       });
     });
   }

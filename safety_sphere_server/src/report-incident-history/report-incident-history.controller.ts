@@ -1,6 +1,6 @@
 import { CreateIncidentReportDto } from 'src/report-incident/report-incident.dto';
 import { ReportIncidentHistoryService } from './report-incident-history.service';
-import { Body, Controller, Get, Param, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 
 @Controller('report-incident-history')
 export class ReportIncidentHistoryController {
@@ -13,11 +13,10 @@ export class ReportIncidentHistoryController {
   }
   @Get('edit-incident/:id')
   async getSpecificReportRecord(@Param('id') id: number) {
-    // const reportRecord = this.reportIncidentHistoryService.getSpecificReportRecord(id);
     const reportRecord =
       await this.reportIncidentHistoryService.getSpecificReportRecord(id);
     console.log('reportRecord: ', reportRecord);
-    const result = [
+    const convertedReportRecord = [
       { name: 'reportId', key: 'id', value: reportRecord.id },
       { name: 'incident', key: 'incidentType', value: reportRecord.incident },
       { name: 'date', key: 'datePicker', value: reportRecord.date },
@@ -32,7 +31,7 @@ export class ReportIncidentHistoryController {
     ];
     console.log('typeof date: ', typeof reportRecord.date);
 
-    return result;
+    return convertedReportRecord;
   }
   @Put('edit-incident/:id')
   updateSpecificReportRecord(

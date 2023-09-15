@@ -1,3 +1,4 @@
+import { LocationHistoryService } from './../../../@services/location-history.service';
 import { Component, ViewChild } from '@angular/core';
 import {
   UntypedFormBuilder,
@@ -19,6 +20,7 @@ export class EditIncidentComponent {
   url = '';
   id = '';
   incidentData: any = {};
+  isFormReady: boolean = false;
 
   @ViewChild(GoogleSearchComponent)
   googleSearchComponent!: GoogleSearchComponent;
@@ -29,11 +31,12 @@ export class EditIncidentComponent {
   constructor(
     private fb: UntypedFormBuilder,
     private apiService: ApiService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private locationHistoryService: LocationHistoryService
   ) {}
 
   ngOnInit(): void {
-    // Get incident ID from route parameters
+
     this.route.params.subscribe((params) => {
       this.id = params['id']; // Extract id from route parameter
       this.url = `/report-incident-history/edit-incident/${this.id}`;
@@ -42,32 +45,43 @@ export class EditIncidentComponent {
       this.apiService.get(this.url).subscribe({
         next: (response) => {
           console.log('Success:', response);
-          this.incidentData = response;
+
           // Initialize the form controls with the retrieved data
-          this.initializeFormControls();
+          this.initializeFormControls(response);
         },
         error: (error) => {
           console.error('Error:', error);
         },
       });
     });
-    this.initializeFormControls();
   }
 
-  initializeFormControls() {
-    // Initialize the form controls in the constructor
-    this.validateForm = this.fb.group({
-      incidentType: [
-        this.incidentData.incidentType || '',
-        [Validators.required],
-      ],
-      datePicker: [this.incidentData.date || null, [Validators.required]],
-      timePicker: [this.incidentData.time || null, [Validators.required]],
-      incidentDetails: [
-        this.incidentData.incidentDetails || '',
-        [Validators.required],
-      ],
-    });
+  initializeFormControls(arrFormData: any) {
+    const formFormat: any = {
+      incidentType: [[Validators.required]],
+      datePicker: [[Validators.required]],
+      timePicker: [[Validators.required]],
+      location: [[Validators.required]],
+      description: [[Validators.required]],
+    };
+
+    // Sets the value of locationHistory in service
+    this.locationHistoryService.locationHistory = arrFormData.find((elem: any) => elem.key === 'location').value
+    console.log('this.locationHistoryService.locationHistory: ', this.locationHistoryService.locationHistory)
+
+    arrFormData = arrFormData.filter((elem: any) => elem.key in formFormat);
+
+    console.log('arrFormData: ', arrFormData);
+
+    for (const elem of arrFormData) {
+      formFormat[elem.key].unshift(elem.value || '');
+    }
+
+    console.log('formFormat: ', formFormat);
+
+    this.validateForm = this.fb.group(formFormat);
+
+    this.isFormReady = true;
   }
 
   onSave() {

@@ -1,8 +1,2 @@
-<input
-  type="text"
-  class="my-search-box"
-  (keydown.enter)="$event.preventDefault()"
-  placeholder="請輸入"
-  type="text"
-  #search
-/>
+<input type="text" class="my-search-box" (keydown.enter)="$event.preventDefault()" placeholder="請輸入" type="text" #search
+  [value]="location" />

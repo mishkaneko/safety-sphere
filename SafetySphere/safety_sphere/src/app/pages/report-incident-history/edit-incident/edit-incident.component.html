@@ -1,27 +1,23 @@
 <div id="reportIncidentDiv">
   <h1>編輯報告</h1>
-  <form nz-form [formGroup]="validateForm" (ngSubmit)="onSave()">
+  <form
+    *ngIf="isFormReady"
+    nz-form
+    [formGroup]="validateForm"
+    (ngSubmit)="onSave()"
+  >
     <nz-form-item>
       <nz-form-label nzRequired>事件類別</nz-form-label>
       <nz-form-control>
         <nz-select nzPlaceHolder="請選擇" formControlName="incidentType">
-          <nz-option nzValue="physicalAssault" nzLabel="肢體襲擊"></nz-option>
-          <nz-option nzValue="verbalThreat" nzLabel="言語威脅"></nz-option>
-          <nz-option nzValue="sexualAssault" nzLabel="非禮/性侵犯"></nz-option>
-          <nz-option
-            nzValue="suspiciousIndividuals"
-            nzLabel="可疑人物"
-          ></nz-option>
-          <nz-option nzValue="theft" nzLabel="盜竊"></nz-option>
-          <nz-option
-            nzValue="fallingFromHeights"
-            nzLabel="高空墮物"
-          ></nz-option>
-          <nz-option
-            nzValue="animalEncounters"
-            nzLabel="野生動物襲擊"
-          ></nz-option>
-          <nz-option nzValue="otherIncidentTypes" nzLabel="其他"></nz-option>
+          <nz-option nzValue="肢體襲擊" nzLabel="肢體襲擊"></nz-option>
+          <nz-option nzValue="言語威脅" nzLabel="言語威脅"></nz-option>
+          <nz-option nzValue="非禮/性侵犯" nzLabel="非禮/性侵犯"></nz-option>
+          <nz-option nzValue="可疑人物" nzLabel="可疑人物"></nz-option>
+          <nz-option nzValue="盜竊" nzLabel="盜竊"></nz-option>
+          <nz-option nzValue="高空墮物" nzLabel="高空墮物"></nz-option>
+          <nz-option nzValue="野生動物襲擊" nzLabel="野生動物襲擊"></nz-option>
+          <nz-option nzValue="其他" nzLabel="其他"></nz-option>
         </nz-select>
       </nz-form-control>
     </nz-form-item>
@@ -51,7 +47,7 @@
           nz-input
           placeholder="請輸入"
           nzAutosize
-          formControlName="incidentDetails"
+          formControlName="description"
         ></textarea>
       </nz-form-control>
     </nz-form-item>

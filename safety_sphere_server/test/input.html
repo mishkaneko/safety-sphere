@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>
+      date <input type="date" onchange="update(this)" />
+      <span class="output"></span>
+    </div>
+    <div>
+      time <input type="time" onchange="update(this)" />
+      <span class="output"></span>
+    </div>
+    <div>
+      datetime-local <input type="datetime-local" onchange="update(this)" />
+      <span class="output"></span>
+    </div>
+    <script>
+      function update(input) {
+        input.parentElement.querySelector('.output').textContent = input.value;
+      }
+    </script>
+  </body>
+</html>

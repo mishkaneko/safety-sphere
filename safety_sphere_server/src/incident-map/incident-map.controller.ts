@@ -5,8 +5,11 @@ import { Controller, Get } from '@nestjs/common';
 export class IncidentMapController {
   constructor(private incidentMapService: IncidentMapService) {}
   @Get('user-report')
-  getUserReport() {
-    return this.incidentMapService.getUserReport();
+  async getUserReport() {
+    let userReport = await this.incidentMapService.getUserReport();
+    console.log('userReport: ', userReport);
+
+    return;
   }
   @Get('news-report')
   getNewsReport() {
