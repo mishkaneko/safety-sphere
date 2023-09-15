@@ -1,4 +1,4 @@
-import { LocationHistoryService } from './../../../@services/location-history.service';
+import { HistoryService} from '../../../@services/history.service';
 import { Component, ViewChild } from '@angular/core';
 import {
   UntypedFormBuilder,
@@ -32,7 +32,7 @@ export class EditIncidentComponent {
     private fb: UntypedFormBuilder,
     private apiService: ApiService,
     private route: ActivatedRoute,
-    private locationHistoryService: LocationHistoryService
+    private historyService: HistoryService
   ) {}
 
   ngOnInit(): void {
@@ -66,8 +66,11 @@ export class EditIncidentComponent {
     };
 
     // Sets the value of locationHistory in service
-    this.locationHistoryService.locationHistory = arrFormData.find((elem: any) => elem.key === 'location').value
-    console.log('this.locationHistoryService.locationHistory: ', this.locationHistoryService.locationHistory)
+    this.historyService.locationHistory = arrFormData.find((elem: any) => elem.key === 'location').value
+    this.historyService.imageHistory = arrFormData.find((elem: any) => elem.key === 'image').value
+
+    console.log('this.locationHistoryService.locationHistory: ', this.historyService.locationHistory)
+    console.log('this.locationHistoryService.imageHistory: ', this.historyService.imageHistory)
 
     arrFormData = arrFormData.filter((elem: any) => elem.key in formFormat);
 

@@ -1,3 +1,4 @@
+import { HistoryService } from '../../../@services/history.service';
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { NzImageService } from 'ng-zorro-antd/image';
@@ -11,12 +12,15 @@ export class IncidentPhotoComponent {
   @ViewChild('canvas', { static: true }) canvas!: ElementRef;
   private ctx!: CanvasRenderingContext2D;
 
-  selectedImages: string[] = [];
+  selectedImages: string[] = this.historyService.imageHistory;
   // selectedImages: any;
   isReviewBtnDisabled = true;
 
-  constructor(private nzImageService: NzImageService) {}
+  constructor(private nzImageService: NzImageService, private historyService: HistoryService) {}
 
+  ngOnInit(): void {
+    this.checkImgAvailability()
+  }
   // Take photo
   async takePhoto() {
     const image = await Camera.getPhoto({

@@ -1,0 +1,10 @@
+<nz-drawer [nzClosable]="true" [nzVisible]="visible" [nzPlacement]="placement" nzTitle="篩選事件"
+    (nzOnClose)="closeFilterDrawer()">
+    <ng-container *nzDrawerContent>
+        <nz-radio-group [(ngModel)]="radioValue">
+            <label nz-radio-button nzValue="用家報告">用家報告</label>
+            <label nz-radio-button nzValue="新聞報道">新聞報道</label>
+            <label nz-radio-button nzValue="全部">全部</label>
+        </nz-radio-group>
+    </ng-container>
+</nz-drawer>

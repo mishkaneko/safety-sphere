@@ -1,4 +1,4 @@
-import { LocationHistoryService } from './../../../@services/location-history.service';
+import { HistoryService } from '../../../@services/history.service';
 import { Component, ElementRef, NgZone, ViewChild } from '@angular/core';
 import { GoogleMap } from '@angular/google-maps';
 
@@ -20,11 +20,11 @@ export class GoogleSearchComponent {
   public map!: GoogleMap;
 
   coordinates: Coordinates = { lat: undefined, lng: undefined };
-  location: string = this.locationHistoryService.locationHistory;
+  location: string = this.historyService.locationHistory;
 
   constructor(
     private ngZone: NgZone,
-    private locationHistoryService: LocationHistoryService
+    private historyService: HistoryService
   ) {}
 
   ngAfterViewInit(): void {

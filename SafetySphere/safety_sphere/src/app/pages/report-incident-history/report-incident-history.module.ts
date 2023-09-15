@@ -16,7 +16,7 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { EditIncidentComponent } from './edit-incident/edit-incident.component';
 import { IncidentPhotoHistoryComponent } from './incident-photo-history/incident-photo-history.component';
 import { DateAndTimeFormatPipe } from 'src/app/pages/report-incident-history/date-and-time-format.pipe';
-import { LocationHistoryService } from 'src/app/@services/location-history.service';
+import { HistoryService } from 'src/app/@services/history.service';
 
 @NgModule({
   declarations: [
@@ -40,6 +40,6 @@ import { LocationHistoryService } from 'src/app/@services/location-history.servi
     ReportIncidentModule,
     NzSpinModule,
   ],
-  providers: [LocationHistoryService],
+  providers: [HistoryService],
 })
 export class ReportIncidentHistoryModule {}

@@ -12,7 +12,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ReportIncidentRoutingModule } from './report-incident-routing.module';
 import { IncidentPhotoComponent } from './incident-photo/incident-photo.component';
-import { LocationHistoryService } from 'src/app/@services/location-history.service';
+import { HistoryService } from 'src/app/@services/history.service';
 
 @NgModule({
   declarations: [
@@ -33,7 +33,7 @@ import { LocationHistoryService } from 'src/app/@services/location-history.servi
     ReportIncidentRoutingModule,
     FormsModule,
   ],
-  providers: [LocationHistoryService],
+  providers: [HistoryService],
   exports: [GoogleSearchComponent, IncidentPhotoComponent],
 })
 export class ReportIncidentModule {}

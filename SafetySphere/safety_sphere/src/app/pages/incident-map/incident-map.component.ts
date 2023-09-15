@@ -1,6 +1,7 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, ViewChild } from '@angular/core';
 import { Geolocation } from '@capacitor/geolocation';
 import { ApiService } from 'src/app/@services/api.service';
+import { FilterIncidentComponent } from './filter-incident/filter-incident.component';
 
 declare const google: any;
 
@@ -35,6 +36,9 @@ export class IncidentMapComponent implements AfterViewInit {
   userReportList: UserReport[] = [];
   newsReportList: NewsReport[] = [];
 
+  @ViewChild(FilterIncidentComponent)
+  filterIncidentComponent!: FilterIncidentComponent
+
   constructor(private apiService: ApiService) {}
 
   async ngAfterViewInit() {
@@ -65,6 +69,7 @@ export class IncidentMapComponent implements AfterViewInit {
     this.getUserReport().subscribe(
       (data: UserReport[]) => {
         this.userReportList = data;
+        console.log('list: ', this.userReportList);
         this.createMarkersForUserReport(map, this.userReportList);
       },
       (error: any) => {
@@ -75,7 +80,6 @@ export class IncidentMapComponent implements AfterViewInit {
     this.getNewsReport().subscribe(
       (data: NewsReport[]) => {
         this.newsReportList = data;
-        console.log('incident-map-component: ', data);
         this.createMarkersForNewsReport(map, this.newsReportList);
       },
       (error: any) => {
@@ -222,5 +226,9 @@ export class IncidentMapComponent implements AfterViewInit {
       default:
         return '';
     }
+  }
+
+  openFilterDrawer() {
+    this.filterIncidentComponent.visible = true
   }
 }

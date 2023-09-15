@@ -14,9 +14,9 @@ export class ApiService {
     return this.http.post(apiUrl, data);
   }
 
-  get<T>(path: string) {
+  get(path: string) {
     const apiUrl = `http://localhost:5000${path}`;
-    return this.http.get<T>(apiUrl);
+    return this.http.get(apiUrl);
   }
 
   put(data: any, path: string) {
