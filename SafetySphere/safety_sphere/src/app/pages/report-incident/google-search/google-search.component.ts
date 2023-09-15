@@ -13,7 +13,6 @@ interface Coordinates {
   styleUrls: ['./google-search.component.scss'],
 })
 export class GoogleSearchComponent {
-
   @ViewChild('search')
   public searchElementRef!: ElementRef;
   @ViewChild(GoogleMap)
@@ -22,10 +21,7 @@ export class GoogleSearchComponent {
   coordinates: Coordinates = { lat: undefined, lng: undefined };
   location: string = this.historyService.locationHistory;
 
-  constructor(
-    private ngZone: NgZone,
-    private historyService: HistoryService
-  ) {}
+  constructor(private ngZone: NgZone, private historyService: HistoryService) {}
 
   ngAfterViewInit(): void {
     // Binds autocomplete to search input control
@@ -40,7 +36,6 @@ export class GoogleSearchComponent {
 
     autocomplete.addListener('place_changed', () => {
       this.ngZone.run(() => {
-
         // Gets place result
         let place: google.maps.places.PlaceResult = autocomplete.getPlace();
 

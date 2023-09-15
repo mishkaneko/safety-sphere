@@ -1,5 +1,5 @@
 import { IncidentMapService } from './incident-map.service';
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 
 @Controller('incident-map')
 export class IncidentMapController {
@@ -32,5 +32,11 @@ export class IncidentMapController {
   @Get('news-report')
   getNewsReport() {
     return this.incidentMapService.getNewsReport();
+  }
+
+  @Get('filtered-report')
+  getFilteredReport(@Query() filters: any) {
+    const filteredDate = this.incidentMapService.filterReport(filters);
+    return filteredDate;
   }
 }

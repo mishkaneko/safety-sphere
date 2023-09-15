@@ -35,52 +35,77 @@ interface NewsReport {
 export class IncidentMapComponent implements AfterViewInit {
   userReportList: UserReport[] = [];
   newsReportList: NewsReport[] = [];
+  private selectedRadioValue: string = '';
+  private AdvancedMarkerElement: any;
+  private heatmap: boolean = false;
 
   @ViewChild(FilterIncidentComponent)
-  filterIncidentComponent!: FilterIncidentComponent
+  filterIncidentComponent!: FilterIncidentComponent;
 
   constructor(private apiService: ApiService) {}
 
   async ngAfterViewInit() {
+    await this.importGoogleLibraries();
+    let map: any = this.setUpMap();
+    this.fetchUserReport(map);
+    this.fetchNewsReport(map);
+  }
+
+  private async importGoogleLibraries() {
     // Get current location
     const { coords } = await Geolocation.getCurrentPosition();
 
     // Request needed libraries
-    const { Map } = (await google.maps.importLibrary(
-      'maps'
-    )) as google.maps.MapsLibrary;
-    const { AdvancedMarkerElement } = (await google.maps.importLibrary(
+    this.AdvancedMarkerElement = (await google.maps.importLibrary(
       'marker'
     )) as google.maps.MarkerLibrary;
-    const { LatLng } = (await google.maps.importLibrary(
-      'core'
-    )) as google.maps.CoreLibrary;
+  }
 
+  private setUpMap() {
     // Set up map
-    const center = new LatLng(22.321514402106235, 114.20919452522213);
+    const center = new google.maps.LatLng(
+      22.321514402106235,
+      114.20919452522213
+    );
     // const center = new LatLng(coords.latitude, coords.longitude);
-    const map = new Map(document.getElementById('map') as HTMLElement, {
-      zoom: 16,
-      center,
-      disableDefaultUI: true,
-      mapId: '4504f8b37365c3d0',
-    });
+    const map = new google.maps.Map(
+      document.getElementById('map') as HTMLElement,
+      {
+        zoom: 16,
+        center,
+        disableDefaultUI: true,
+        mapId: '4504f8b37365c3d0',
+      }
+    );
 
+    return map;
+  }
+
+  private fetchUserReport(map: google.maps.Map) {
     this.getUserReport().subscribe(
       (data: UserReport[]) => {
         this.userReportList = data;
-        console.log('list: ', this.userReportList);
-        this.createMarkersForUserReport(map, this.userReportList);
+        if (this.heatmap) {
+          this.createHeatmap(map, this.userReportList);
+        } else {
+          this.createMarkersForUserReport(map, this.userReportList);
+        }
       },
       (error: any) => {
         console.error('Error fetching data: ', error);
       }
     );
+  }
 
+  private fetchNewsReport(map: google.maps.Map) {
     this.getNewsReport().subscribe(
       (data: NewsReport[]) => {
         this.newsReportList = data;
-        this.createMarkersForNewsReport(map, this.newsReportList);
+        if (this.heatmap) {
+          this.createHeatmap(map, this.newsReportList);
+        } else {
+          this.createMarkersForNewsReport(map, this.newsReportList);
+        }
       },
       (error: any) => {
         console.error('Error fetching data: ', error);
@@ -103,8 +128,8 @@ export class IncidentMapComponent implements AfterViewInit {
           map,
           content: this.buildContentForUserReport(report),
           position: {
-            lat: parseFloat(report.latitude),
-            lng: parseFloat(report.longitude),
+            lat: report.latitude,
+            lng: report.longitude,
           },
           title: 'title',
         });
@@ -122,8 +147,8 @@ export class IncidentMapComponent implements AfterViewInit {
           map,
           content: this.buildContentForNewsReport(report),
           position: {
-            lat: parseFloat(report.latitude),
-            lng: parseFloat(report.longitude),
+            lat: report.latitude,
+            lng: report.longitude,
           },
           title: 'title',
         });
@@ -228,7 +253,42 @@ export class IncidentMapComponent implements AfterViewInit {
     }
   }
 
+  // Filter Incident
   openFilterDrawer() {
-    this.filterIncidentComponent.visible = true
+    this.filterIncidentComponent.visible = true;
+  }
+
+  onIncidentTypeValueChange(value: string) {
+    let map = this.setUpMap();
+    if (value != 'all') {
+      (this as any)[value](map);
+    } else {
+      this.fetchUserReport(map);
+      this.fetchNewsReport(map);
+    }
+  }
+
+  onMapTypeValueChange(value: string) {
+    let map = this.setUpMap();
+    if (value == 'showHeatmap') {
+      this.heatmap = true;
+    } else {
+      this.heatmap = false;
+    }
+    this.fetchUserReport(map);
+    this.fetchNewsReport(map);
+  }
+
+  // Heatmap
+  createHeatmap(map: google.maps.Map, list: any[]) {
+    let heatmapData = [];
+    for (let report of list) {
+      let data = new google.maps.LatLng(report.latitude, report.longitude);
+      heatmapData.push(data);
+    }
+    let heatmap = new google.maps.visualization.HeatmapLayer({
+      data: heatmapData,
+    });
+    heatmap.setMap(map);
   }
 }

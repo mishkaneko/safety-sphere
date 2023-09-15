@@ -65,4 +65,11 @@ export class IncidentMapService {
       throw Error(error);
     }
   }
+
+  async filterReport(filters: any) {
+    try {
+      const filteredReport = await knex;
+      return filteredReport;
+    } catch (error) {}
+  }
 }

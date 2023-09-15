@@ -1,10 +1,18 @@
 <nz-drawer [nzClosable]="true" [nzVisible]="visible" [nzPlacement]="placement" nzTitle="篩選事件"
     (nzOnClose)="closeFilterDrawer()">
     <ng-container *nzDrawerContent>
-        <nz-radio-group [(ngModel)]="radioValue">
-            <label nz-radio-button nzValue="用家報告">用家報告</label>
-            <label nz-radio-button nzValue="新聞報道">新聞報道</label>
-            <label nz-radio-button nzValue="全部">全部</label>
-        </nz-radio-group>
+        <div class="mapType"><label>地圖類型</label>
+            <nz-radio-group [(ngModel)]="mapTypeRadioValue" (ngModelChange)="onMapTypeChange()">
+                <label nz-radio-button nzValue="showHeatmap" (click)="disabled = true">熱視圖</label>
+                <label nz-radio-button nzValue="showOriginal" (click)="disabled = false">普通地圖</label>
+            </nz-radio-group>
+        </div>
+        <div class="dataType"><label>資料類型</label>
+            <nz-radio-group [(ngModel)]="incidentTypeRadioValue" (ngModelChange)="onIncidentTypeChange()">
+                <label nz-radio-button nzValue="fetchUserReport" [nzDisabled]="disabled">用家報告</label>
+                <label nz-radio-button nzValue="fetchNewsReport" [nzDisabled]="disabled">新聞報道</label>
+                <label nz-radio-button nzValue="all" [nzDisabled]="disabled">全部</label>
+            </nz-radio-group>
+        </div>
     </ng-container>
 </nz-drawer>

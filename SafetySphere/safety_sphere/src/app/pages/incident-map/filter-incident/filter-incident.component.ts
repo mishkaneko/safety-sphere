@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { NzDrawerPlacement } from 'ng-zorro-antd/drawer';
 
 @Component({
@@ -7,11 +7,24 @@ import { NzDrawerPlacement } from 'ng-zorro-antd/drawer';
   styleUrls: ['./filter-incident.component.scss'],
 })
 export class FilterIncidentComponent {
+  @Output() incidentTypeChange = new EventEmitter<string>();
+  @Output() mapTypeChange = new EventEmitter<string>();
+
   visible = false;
-  radioValue = '全部';
   placement: NzDrawerPlacement = 'right';
+  disabled = false;
+  mapTypeRadioValue = 'showOriginal';
+  incidentTypeRadioValue = 'all';
 
   closeFilterDrawer(): void {
     this.visible = false;
+  }
+
+  onIncidentTypeChange() {
+    this.incidentTypeChange.emit(this.incidentTypeRadioValue);
+  }
+
+  onMapTypeChange() {
+    this.mapTypeChange.emit(this.mapTypeRadioValue);
   }
 }
