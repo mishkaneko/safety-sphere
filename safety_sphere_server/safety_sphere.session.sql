@@ -1,2 +1,2 @@
 select *
-from user_report
+from "user"

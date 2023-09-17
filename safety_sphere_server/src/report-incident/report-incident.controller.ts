@@ -8,6 +8,7 @@ export class ReportIncidentController {
 
   @Post('user-report')
   postIncidentReport(@Body() createIncidentReportDto: CreateIncidentReportDto) {
+    console.log('user-report')
     return this.reportIncidentService.postIncidentReport(
       createIncidentReportDto,
     );

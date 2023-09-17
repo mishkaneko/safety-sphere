@@ -1,0 +1,13 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "safety_sphere",
+            "database": "safety_sphere",
+            "username": "safety_sphere"
+        }
+    ]
+}

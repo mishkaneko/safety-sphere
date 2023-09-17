@@ -1,0 +1,28 @@
+:host {
+  flex-grow: 1;
+}
+
+.login-form-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .login-form {
+    margin: 0 auto;
+    width: 100%;
+    padding: 0 5vw;
+  }
+  
+  .login-form-margin {
+    margin-bottom: 16px;
+  }
+  
+  .login-form-forgot {
+    float: right;
+  }
+  
+  .login-form-button {
+    width: 100%;
+  }
+}

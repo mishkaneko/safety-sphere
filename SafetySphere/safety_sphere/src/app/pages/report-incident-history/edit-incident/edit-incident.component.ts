@@ -39,6 +39,8 @@ export class EditIncidentComponent {
 
     this.route.params.subscribe((params) => {
       this.id = params['id']; // Extract id from route parameter
+      console.log('this.id')
+      console.log(this.id)
       this.url = `/report-incident-history/edit-incident/${this.id}`;
 
       // Use id to fetch incident information

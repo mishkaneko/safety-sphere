@@ -1,0 +1,4 @@
+<div id="map"><nz-spin nzTip="Loading..."></nz-spin></div>
+<button nz-button (click)="openFilterDrawer()"><i class="fa-solid fa-filter"></i></button>
+<filter-incident (incidentTypeChange)="onIncidentTypeValueChange($event)"
+    (mapTypeChange)="onMapTypeValueChange($event)"></filter-incident>

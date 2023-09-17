@@ -15,7 +15,7 @@ async function bootstrap() {
   // Swagger
   setupSwagger(app);
 
-  let port = 5000;
+  let port = 4000;
   await app.listen(port);
   print(port);
 }

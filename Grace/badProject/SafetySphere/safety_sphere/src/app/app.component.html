@@ -1,0 +1,125 @@
+<nz-layout class="layout">
+  <nz-sider
+    nzCollapsible
+    nzBreakpoint="lg"
+    [nzCollapsedWidth]="0"
+    [nzTrigger]="null"
+    [(nzCollapsed)]="isCollapsed"
+    [nzWidth]="'100%'"
+  >
+    <!-- <nz-sider class="menu-sidebar"
+    nzCollapsible
+    nzWidth="256px"
+    nzBreakpoint="md"
+    [(nzCollapsed)]="isCollapsed"
+    [nzTrigger]="null"
+  > -->
+
+    <div
+      class="sidebar-logo"
+      style="display: flex; justify-content: space-between"
+    >
+      <div style="width: 80%; display: flex">
+        <div style="width: 10vw">
+          <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo" />
+        </div>
+        <h1>SafetySphere</h1>
+      </div>
+
+      <div>
+        <button
+          nz-button
+          nzType="text"
+          nzShape="circle"
+          nzSize="large"
+          (click)="closeSideMenu()"
+        >
+          <span
+            nz-icon
+            nzType="close-circle"
+            nzTheme="fill"
+            style="color: white; font-size: 6vw"
+          ></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- <ul nz-menu nzTheme="dark" nzMode="inline">
+      <li nz-menu-item>
+        <span nz-icon nzType="user"></span>
+        <span>nav 1</span>
+      </li>
+      <li nz-menu-item>
+        <span nz-icon nzType="video-camera"></span>
+        <span>nav 2</span>
+      </li>
+      <li nz-menu-item>
+        <span nz-icon nzType="upload"></span>
+        <span>nav 3</span>
+      </li>
+      <li nz-menu-item>
+        <span nz-icon nzType="user"></span>
+        <span>nav 4</span>
+      </li>
+    </ul> -->
+    <ul
+      nz-menu
+      nzTheme="dark"
+      nzMode="inline"
+      [nzInlineCollapsed]="isCollapsed"
+    >
+      <li nz-submenu nzOpen nzTitle="Dashboard" nzIcon="dashboard">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/welcome">Welcome</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a>Monitor</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a>Workplace</a>
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzOpen nzTitle="Form" nzIcon="form">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a>Basic Form</a>
+          </li>
+        </ul>
+      </li>
+      
+      <li nz-menu-item nzMatchRouter>
+        <a routerLink="/escape-route">Escape route</a>
+      </li>
+      <li nz-menu-item nzMatchRouter>
+        <a routerLink="/incident-map">事件地圖</a>
+      </li>
+      <li nz-menu-item nzMatchRouter>
+        <a routerLink="/report-incident">報告事件</a>
+      </li>
+      <li nz-menu-item nzMatchRouter>
+        <a routerLink="/report-incident-history">我的報告記錄</a>
+      </li>
+      <li nz-menu-item nzMatchRouter>
+        <a routerLink="/user-profile">我的個人資料</a>
+      </li>
+    </ul>
+  </nz-sider>
+
+  <nz-layout
+    [hidden]="!isCollapsed"
+    style="display: flex; flex-direction: column"
+  >
+    <nz-header>
+      <span
+        class="trigger"
+        nz-icon
+        [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+        (click)="isCollapsed = !isCollapsed"
+      ></span>
+    </nz-header>
+
+    <router-outlet></router-outlet>
+  </nz-layout>
+</nz-layout>

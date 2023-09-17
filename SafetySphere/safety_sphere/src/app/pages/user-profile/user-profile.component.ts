@@ -82,7 +82,7 @@ export class UserProfileComponent {
     console.log(formObj);
 
     // Sends data to server
-    this.apiService.post(formObj, '/user-profile/user-information').subscribe({
+    this.apiService.post(formObj, '/user-profile').subscribe({
       next: (response) => {
         console.log('Success:', response);
       },

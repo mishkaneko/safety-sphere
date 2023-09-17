@@ -1,26 +1,16 @@
 <nz-layout class="layout">
   <nz-sider
-    nzCollapsible
-    nzBreakpoint="lg"
-    [nzCollapsedWidth]="0"
-    [nzTrigger]="null"
-    [(nzCollapsed)]="isCollapsed"
-    [nzWidth]="'100%'"
+  nzCollapsible
+  nzBreakpoint="lg"
+  [nzCollapsedWidth]="0"
+  [nzTrigger]="null"
+  [nzWidth]="'100%'"
+  [(nzCollapsed)]="isCollapsed"
   >
-    <!-- <nz-sider class="menu-sidebar"
-    nzCollapsible
-    nzWidth="256px"
-    nzBreakpoint="md"
-    [(nzCollapsed)]="isCollapsed"
-    [nzTrigger]="null"
-  > -->
 
-    <div
-      class="sidebar-logo"
-      style="display: flex; justify-content: space-between"
-    >
-      <div style="width: 80%; display: flex">
-        <div style="width: 10vw">
+    <div class="sidebar-top-container">
+      <div class="logo-wrap">
+        <div class="logo-conatiner">
           <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo" />
         </div>
         <h1>SafetySphere</h1>
@@ -32,43 +22,26 @@
           nzType="text"
           nzShape="circle"
           nzSize="large"
-          (click)="closeSideMenu()"
-        >
+          (click)="isCollapsed = true"
+      >
           <span
             nz-icon
             nzType="close-circle"
             nzTheme="fill"
-            style="color: white; font-size: 6vw"
+            class="icon-close"
           ></span>
         </button>
       </div>
     </div>
 
-    <!-- <ul nz-menu nzTheme="dark" nzMode="inline">
-      <li nz-menu-item>
-        <span nz-icon nzType="user"></span>
-        <span>nav 1</span>
-      </li>
-      <li nz-menu-item>
-        <span nz-icon nzType="video-camera"></span>
-        <span>nav 2</span>
-      </li>
-      <li nz-menu-item>
-        <span nz-icon nzType="upload"></span>
-        <span>nav 3</span>
-      </li>
-      <li nz-menu-item>
-        <span nz-icon nzType="user"></span>
-        <span>nav 4</span>
-      </li>
-    </ul> -->
     <ul
       nz-menu
       nzTheme="dark"
       nzMode="inline"
       [nzInlineCollapsed]="isCollapsed"
+      (click)="isCollapsed = true"
     >
-      <li nz-submenu nzOpen nzTitle="Dashboard" nzIcon="dashboard">
+      <!-- <li nz-submenu nzOpen nzTitle="Dashboard" nzIcon="dashboard">
         <ul>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/welcome">Welcome</a>
@@ -87,10 +60,16 @@
             <a>Basic Form</a>
           </li>
         </ul>
+      </li> -->
+
+      <li nz-menu-item nzMatchRouter>
+        <a routerLink="/login" class="login">注册/登入</a>
       </li>
+
       <li nz-menu-item nzMatchRouter>
         <a routerLink="/escape-route">Escape route</a>
       </li>
+      
       <li nz-menu-item nzMatchRouter>
         <a routerLink="/incident-map">事件地圖</a>
       </li>
@@ -106,17 +85,20 @@
     </ul>
   </nz-sider>
 
-  <nz-layout
-    [hidden]="!isCollapsed"
-    style="display: flex; flex-direction: column"
-  >
-    <nz-header>
+  <nz-layout [hidden]="!isCollapsed" class="sub-layout">
+    <nz-header class="header">
       <span
-        class="trigger"
+        class="menu"
         nz-icon
         [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
         (click)="isCollapsed = !isCollapsed"
       ></span>
+
+      <div class="left-badge-container" *ngIf="NearbyPlacesService.isEscaping">
+        <div class="left-badge" nz-icon [nzType]="'sound'" [nzTheme]="'twotone'" [nzTwotoneColor]="iconSoundColor()" (click)="onSwitchAlarm()"></div>
+        <div class="left-badge" nz-icon [nzType]="'sync'" (click)="onRestart()"></div>
+        <div class="left-badge" nz-icon nzType="close" nzTheme="outline" (click)="onStopEscape()"></div>
+      </div>
     </nz-header>
 
     <router-outlet></router-outlet>

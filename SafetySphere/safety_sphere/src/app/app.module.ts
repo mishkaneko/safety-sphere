@@ -1,4 +1,3 @@
-import { EditIncidentComponent } from './pages/report-incident-history/edit-incident/edit-incident.component';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -16,16 +15,16 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { GoogleMapsModule } from '@angular/google-maps';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { LoginModule } from './pages/login/login.module'
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
-import { GoogleMapsModule } from '@angular/google-maps';
 
 registerLocaleData(zh);
 
 @NgModule({
-  // Might create a shared module for IncidentPhotoComponent
   declarations: [AppComponent],
   imports: [
     BrowserModule,
@@ -42,8 +41,9 @@ registerLocaleData(zh);
     GoogleMapsModule,
     NzFormModule,
     NzSelectModule,
+    LoginModule,
     NzDatePickerModule,
-    NzTimePickerModule,
+    NzTimePickerModule
   ],
   providers: [{ provide: NZ_I18N, useValue: zh_TW }],
   bootstrap: [AppComponent],

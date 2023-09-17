@@ -8,19 +8,19 @@ export class ApiService {
   constructor(private http: HttpClient) {}
 
   post(data: any, path: string) {
-    const apiUrl = `http://localhost:5000${path}`;
+    const apiUrl = `http://localhost:4000${path}`;
     // Sends post request to server
     console.log('service:', data);
     return this.http.post(apiUrl, data);
   }
 
   get(path: string) {
-    const apiUrl = `http://localhost:5000${path}`;
+    const apiUrl = `http://localhost:4000${path}`;
     return this.http.get(apiUrl);
   }
 
   put(data: any, path: string) {
-    const apiUrl = `http://localhost:5000${path}`;
+    const apiUrl = `http://localhost:4000${path}`;
     // Sends put request to server
     console.log('service:', data);
     return this.http.put(apiUrl, data);

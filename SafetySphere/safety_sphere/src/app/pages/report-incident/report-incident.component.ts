@@ -47,7 +47,8 @@ export class ReportIncidentComponent {
     const location = this.googleSearchComponent.location;
     const coordinates = this.googleSearchComponent.coordinates;
     const description = this.validateForm.get('description')!.value;
-    const image = this.incidentPhotoComponent.selectedImages;
+    // const image = this.incidentPhotoComponent.selectedImages;
+    const image : any[] = [];
 
     console.log('date:', this.validateForm.get('datePicker'));
     console.log('date.value:', this.validateForm.get('datePicker')?.value);

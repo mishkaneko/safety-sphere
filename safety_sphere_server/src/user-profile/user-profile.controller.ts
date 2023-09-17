@@ -11,6 +11,7 @@ export class UserProfileController {
   postProfileInformation(
     @Body() createProfileInformationDto: CreateProfileInformationDto,
   ) {
+    console.log('postProfileInformation')
     return this.userProfileService.postProfileInformation(
       createProfileInformationDto,
     );
@@ -18,8 +19,7 @@ export class UserProfileController {
 
   @Get('/')
   async getProfileInformation() {
-    let profileInformation =
-      await this.userProfileService.getProfileInformation();
+    let profileInformation = await this.userProfileService.getProfileInformation();
     console.log('profileInformation: ', profileInformation);
     let convertedProfileInformation = [
       {

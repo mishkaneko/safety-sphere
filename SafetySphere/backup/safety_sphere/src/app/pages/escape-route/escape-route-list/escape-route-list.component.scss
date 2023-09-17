@@ -1,0 +1,39 @@
+.demo-loadmore-list {
+  height: 29.4%;
+  overflow: auto;
+  max-height: 50vh;
+}
+
+// .loadmore {
+//   text-align: center;
+//   margin-top: 12px;
+//   height: 32px;
+//   line-height: 32px;
+// }
+
+nz-list-item {
+  padding: 0 3vw;
+  display: block;
+  
+  // .btn-list-item-meta {
+  //   height: 100%;
+
+    .list-item-meta-container {
+      display: flex;
+      border-radius: 4px;
+      padding: 1vw;
+  
+      .list-item-meta-right-side {
+        text-align: right;
+      }
+    }
+  // }
+}
+
+.placeSelected {
+  background-color: #e0e0e0;
+}
+
+nz-divider {
+  margin: 1vh 0;
+}

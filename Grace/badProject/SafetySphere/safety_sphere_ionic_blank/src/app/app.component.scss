@@ -1,0 +1,64 @@
+.layout {
+  min-height: 100vh;
+}
+
+.trigger {
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 24px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.trigger:hover {
+  color: #1890ff;
+}
+
+.sidebar-logo {
+  position: relative;
+  height: 64px;
+  // padding: 0 1vw;
+  padding-left: 4.5vw;
+  padding-right: 1vw;
+  line-height: 64px;
+  background: #001529;
+  transition: all .3s;
+}
+
+.sidebar-logo div img {
+  width: 100%;
+}
+
+.sidebar-logo div h1 {
+  margin: 0 0 0 20px;
+  color: #fff;
+  font-weight: 600;
+  font-size: 5vw;
+  font-family: Avenir,Helvetica Neue,Arial,Helvetica,sans-serif;
+}
+
+.sidebar-logo .btn-close {
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  font-family: Avenir,Helvetica Neue,Arial,Helvetica,sans-serif;
+}
+
+nz-header {
+  background: #fff;
+  padding: 0;
+}
+
+nz-content {
+  margin: 24px 16px 0;
+}
+
+.inner-content {
+  padding: 24px;
+  background: #fff;
+  min-height: 360px;
+}
+
+nz-footer {
+  text-align: center;
+}
