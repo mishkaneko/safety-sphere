@@ -1,9 +1,24 @@
-import { IsString, IsObject, IsArray, IsDateString } from 'class-validator';
+import { IsString } from 'class-validator';
 
-export class LoginDto {
+export class CreateVerificationCodeDto {
   @IsString()
   email: string;
+}
+
+export class LoginDto {
+  // @IsString()
+  // email: string;
 
   @IsString()
-  password: string;
+  userUuid: string;
+}
+
+export class VerifyEmailExistDto {
+  @IsString()
+  email: string;
+}
+
+export class RegisterDto {
+  @IsString()
+  email: string;
 }

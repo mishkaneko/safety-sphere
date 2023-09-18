@@ -11,7 +11,6 @@ export class ReportIncidentService {
   async postIncidentReport(dto: CreateIncidentReportDto) {
     const transformedDto = this.transformData(dto);
 
-    try {
       const [userReportId] = await knex('user_report')
         .insert({
           user_id: '1',
@@ -34,9 +33,6 @@ export class ReportIncidentService {
       }
 
       return { message: 'successfully inserted user_report into db' };
-    } catch (error) {
-      throw Error(error);
-    }
   }
 
   transformData(dto: CreateIncidentReportDto) {

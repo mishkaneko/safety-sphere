@@ -6,6 +6,11 @@ import { knex } from '../knex';
 export class UserProfileService {
   constructor() {}
 
+  // async updateUserName (userDto: UserDto) {
+  //   console.log('knex updateUserName')
+  //   await knex('user').update({ user_name: userDto.name }).where('user_uuid', userDto.userUuid)
+  // }
+
   async postProfileInformation(dto: CreateProfileInformationDto) {
     try {
       await knex('user').insert({

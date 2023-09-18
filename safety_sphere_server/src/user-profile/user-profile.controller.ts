@@ -6,6 +6,12 @@ import { Body, Controller, Get, Post, Put } from '@nestjs/common';
 export class UserProfileController {
   constructor(private userProfileService: UserProfileService) {}
 
+  // @Post('updateUserName')
+  // async updateUserName(@Body() userDto: UserDto) {
+  //   console.log('post updateUserName')
+  //   await this.userProfileService.updateUserName(userDto)
+  // }
+
   // Might have to turn this put
   @Post('/')
   postProfileInformation(
