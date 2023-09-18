@@ -1,0 +1,30 @@
+$text-color: #7d8892;
+
+.list-item-meta-right-side {
+    text-align: right;
+}
+
+.upload-image-choice-button {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.upload-image-choice-button button {
+    width: 120px;
+}
+
+.image-review-button {
+    display: flex;
+    justify-content: center;
+}
+
+.ant-divider-horizontal.ant-divider-with-text {
+    color: $text-color;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+}
+
+h4 { 
+    color: $text-color;
+    margin: 0;
+}

@@ -13,6 +13,10 @@ body {
   outline: none !important;
 }
 
+.ant-layout {
+  background: linear-gradient(to bottom, #d9e2ed, #f0f2f5, #d9e2ed);
+}
+
 app-incident-map {
   --physical-color: #eea13e;
   --verbal-color: #4693cb;

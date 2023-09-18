@@ -1,23 +1,72 @@
+$text-color: #7d8892;
+
+.report-incident-form-item {
+  display: flex;
+  width: 150px;
+}
+
+.selection-title {
+  margin-bottom: 0 !important;
+  font-size: 16px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  font-weight: 500;
+  color: #7d8892;
+}
+
+.selection-title-address,
+.selection-title-description,
+.selection-title-image {
+  padding-top: 12px;
+  padding-bottom: 20px;
+}
+
+.selection-title-address {
+  padding-top: 30px;
+}
+
+.selection-title-description {
+  padding-top: 25px;
+}
+
+.ant-form-item .ant-form-item-label {
+  padding: 0;
+}
+
+.ant-form-horizontal .ant-form-item-control {
+  // border: orange 2px solid;
+  width: 100%;
+  margin-left: auto;
+}
+
+.ant-form-item-control,
+.ant-form-item-control-input,
+.ant-form-item-control-input-content,
+.ant-select-selector {
+  border-radius: 5px;
+}
+
 textarea {
- padding-left: 11px; 
- padding-top: 4px;
- border: 1px solid #d9d9d9;
- width: 100%;
+  padding-left: 11px;
+  padding-top: 4px;
+  border: 1px solid #d9d9d9;
+  border-radius: 5px;
+  width: 100%;
 }
 
 .ant-picker {
-    width: 100%;
+  width: 100%;
+  border-radius: 5px;
 }
 
 .form-subtitle {
-    margin-left: 5px;
+  margin-left: 5px;
 }
 
 #reportIncidentDiv {
-    padding: 10px;
+  padding: 25px;
 }
 
-.submit-form-success-snackbar {
-    background-color: rgb(43, 43, 43);
-    color: white;
+.submit-button {
+  display: flex;
+  justify-content: right;
 }

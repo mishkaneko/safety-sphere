@@ -1,3 +1,4 @@
+import { HistoryService } from 'src/app/@services/history.service';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from 'src/app/@services/api.service';
@@ -18,10 +19,15 @@ interface ReportRecordList {
   styleUrls: ['./report-incident-history.component.scss'],
 })
 export class ReportIncidentHistoryComponent {
+  protected HistoryService = HistoryService;
   reportRecordList: ReportRecordList[] = [];
 
   constructor(private apiService: ApiService, private router: Router) {}
+
   ngOnInit(): void {
+
+    HistoryService.showReportIncidentHistoryTitle = true;
+
     this.apiService.get('/report-incident-history/report-record').subscribe({
       next: (data: any) => {
         console.log('component:', data);
@@ -36,5 +42,9 @@ export class ReportIncidentHistoryComponent {
 
   editIncident(recordId: number) {
     this.router.navigate(['/report-incident-history/edit-incident', recordId]);
+  }
+
+  ngOnDestroy() {
+    HistoryService.showReportIncidentHistoryTitle = false;
   }
 }

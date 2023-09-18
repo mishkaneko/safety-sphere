@@ -2,6 +2,7 @@ import { Component, AfterViewInit, ViewChild } from '@angular/core';
 import { Geolocation } from '@capacitor/geolocation';
 import { ApiService } from 'src/app/@services/api.service';
 import { FilterIncidentComponent } from './filter-incident/filter-incident.component';
+import { IncidentMapService } from 'src/app/@services/incident-map.service';
 
 declare const google: any;
 
@@ -33,6 +34,7 @@ interface NewsReport {
   styleUrls: ['./incident-map.component.scss'],
 })
 export class IncidentMapComponent implements AfterViewInit {
+  showIncidentMapTitle: boolean = false;
   userReportList: UserReport[] = [];
   newsReportList: NewsReport[] = [];
   private selectedRadioValue: string = '';
@@ -43,6 +45,10 @@ export class IncidentMapComponent implements AfterViewInit {
   filterIncidentComponent!: FilterIncidentComponent;
 
   constructor(private apiService: ApiService) {}
+
+  ngOnInit() {
+    IncidentMapService.showIncidentMapTitle = true;
+  }
 
   async ngAfterViewInit() {
     await this.importGoogleLibraries();
@@ -254,9 +260,6 @@ export class IncidentMapComponent implements AfterViewInit {
   }
 
   // Filter Incident
-  openFilterDrawer() {
-    this.filterIncidentComponent.visible = true;
-  }
 
   onIncidentTypeValueChange(value: string) {
     let map = this.setUpMap();
@@ -290,5 +293,13 @@ export class IncidentMapComponent implements AfterViewInit {
       data: heatmapData,
     });
     heatmap.setMap(map);
+  }
+
+  openFilterDrawer(): void {
+    this.filterIncidentComponent.visible = true;
+  }
+
+  ngOnDestroy() {
+    IncidentMapService.showIncidentMapTitle = false;
   }
 }
