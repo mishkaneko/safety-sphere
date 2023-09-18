@@ -21,6 +21,9 @@ import { EscapeRouteGateway } from './escape-route/escape-route.gateway';
     FollowModule
   ],
   controllers: [AppController],
-  providers: [AppService, EscapeRouteGateway],
+  providers: [
+    AppService,
+    //  EscapeRouteGateway
+  ],
 })
 export class AppModule {}
