@@ -17,6 +17,7 @@ import { EditIncidentComponent } from './edit-incident/edit-incident.component';
 import { IncidentPhotoHistoryComponent } from './incident-photo-history/incident-photo-history.component';
 import { DateAndTimeFormatPipe } from 'src/app/pages/report-incident-history/date-and-time-format.pipe';
 import { HistoryService } from 'src/app/@services/history.service';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { HistoryService } from 'src/app/@services/history.service';
     NzTimePickerModule,
     ReportIncidentModule,
     NzSpinModule,
+    NzIconModule
   ],
   providers: [HistoryService],
 })

@@ -13,6 +13,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ReportIncidentRoutingModule } from './report-incident-routing.module';
 import { IncidentPhotoComponent } from './incident-photo/incident-photo.component';
 import { HistoryService } from 'src/app/@services/history.service';
+import { NzListModule } from 'ng-zorro-antd/list';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzNotificationModule } from 'ng-zorro-antd/notification';
 
 @NgModule({
   declarations: [
@@ -32,6 +37,11 @@ import { HistoryService } from 'src/app/@services/history.service';
     ReactiveFormsModule,
     ReportIncidentRoutingModule,
     FormsModule,
+    NzListModule,
+    NzDividerModule,
+    NzButtonModule,
+    NzIconModule,
+    NzNotificationModule 
   ],
   providers: [HistoryService],
   exports: [GoogleSearchComponent, IncidentPhotoComponent],

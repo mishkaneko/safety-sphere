@@ -102,3 +102,20 @@ nz-content {
 nz-footer {
   text-align: center;
 }
+
+.nav-title-container {
+  flex-grow: 1;
+}
+
+.badge-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.filter-icon {
+  font-size: 20px;
+  padding-right: 20px;
+  padding-bottom: 10px;
+  align-self: center;
+
+}

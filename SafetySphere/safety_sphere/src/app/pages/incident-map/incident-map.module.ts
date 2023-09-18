@@ -8,6 +8,7 @@ import { FilterIncidentComponent } from './filter-incident/filter-incident.compo
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { FormsModule } from '@angular/forms';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 @NgModule({
   imports: [
@@ -18,6 +19,7 @@ import { FormsModule } from '@angular/forms';
     NzButtonModule,
     NzRadioModule,
     FormsModule,
+    NzIconModule
   ],
   declarations: [IncidentMapComponent, FilterIncidentComponent],
   exports: [IncidentMapComponent],

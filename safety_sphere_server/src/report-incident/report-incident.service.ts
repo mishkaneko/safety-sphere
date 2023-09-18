@@ -1,47 +1,44 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { CreateIncidentReportDto } from './report-incident.dto';
 import { knex } from '../knex';
 
 @Injectable()
 export class ReportIncidentService {
-  // dateNumber;
-  // timeNumber;
   constructor() {}
 
   async postIncidentReport(dto: CreateIncidentReportDto) {
     const transformedDto = this.transformData(dto);
+    console.log('transformedDto: ', transformedDto);
 
-      const [userReportId] = await knex('user_report')
-        .insert({
-          user_id: '1',
-          incident_id: dto.incidentType,
-          date: dto.date,
-          time: dto.time,
-          location: dto.location,
-          latitude: dto.coordinates.lat,
-          longitude: dto.coordinates.lng,
-          description: dto.description,
-        })
-        .returning('id');
-      console.log(userReportId);
+    const [userReportId] = await knex('user_report')
+      .insert({
+        // change user id
+        user_id: '1',
+        incident_id: dto.incidentType,
+        date: dto.date,
+        time: dto.time,
+        location: dto.location,
+        latitude: dto.lat,
+        longitude: dto.lng,
+        description: dto.description,
+      })
+      .returning('id');
+    console.log(userReportId);
 
-      for (const image of dto.image) {
-        await knex('image').insert({
-          user_report_id: userReportId.id,
-          image_string: image,
-        });
-      }
+    console.log('store images:', dto.filenames);
+    for (const image of dto.filenames) {
+      await knex('image').insert({
+        user_report_id: userReportId.id,
+        // TODO rename to filename
+        image_string: image,
+      });
+    }
 
-      return { message: 'successfully inserted user_report into db' };
+    return { message: 'successfully inserted user_report into db' };
   }
 
   transformData(dto: CreateIncidentReportDto) {
     dto.incidentType = this.transformIncidentType(dto.incidentType);
-    // this.dateNumber = this.transformDateAndTime(dto.date);
-    // this.timeNumber = this.transformDateAndTime(dto.time);
-    // console.log('this.dateNumber: ', this.dateNumber);
-    // console.log('typeof this.dateNumber: ', typeof this.dateNumber);
-
     return dto;
   }
 
@@ -63,10 +60,8 @@ export class ReportIncidentService {
         return '7';
       case '其他':
         return '8';
+      default:
+        throw new BadRequestException('invalid incident type: ' + incidentType);
     }
   }
-
-  // private transformDateAndTime(data) {
-  //   return Date.parse(data);
-  // }
 }

@@ -1,7 +1,22 @@
 import { HistoryService } from '../../../@services/history.service';
-import { Component, ViewChild, ElementRef } from '@angular/core';
-import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-import { NzImageService } from 'ng-zorro-antd/image';
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  Pipe,
+  SimpleChanges,
+} from '@angular/core';
+// import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { NzImage, NzImageService } from 'ng-zorro-antd/image';
+import { selectImage } from '@beenotung/tslib/file';
+import { compressMobilePhoto, dataURItoFile } from '@beenotung/tslib/image';
+import { format_byte } from '@beenotung/tslib/format';
+
+interface Image {
+  file: File;
+  src: string; // base64
+  alt: string;
+}
 
 @Component({
   selector: 'incident-photo',
@@ -12,115 +27,60 @@ export class IncidentPhotoComponent {
   @ViewChild('canvas', { static: true }) canvas!: ElementRef;
   private ctx!: CanvasRenderingContext2D;
 
-  selectedImages: string[] = this.historyService.imageHistory;
-  // selectedImages: any;
-  isReviewBtnDisabled = true;
+  // selectedImages: string[] = this.historyService.imageHistory
+  //   ? this.historyService.imageHistory
+  //   : [];
+  images: Image[] = [];
 
-  constructor(private nzImageService: NzImageService, private historyService: HistoryService) {}
+  // isReviewBtnDisabled = true;
+
+  get isReviewBtnDisabled() {
+    return this.images.length == 0;
+  }
+
+  constructor(
+    private nzImageService: NzImageService,
+    private historyService: HistoryService
+  ) {}
 
   ngOnInit(): void {
-    this.checkImgAvailability()
+    // this.checkImgAvailability();
   }
-  // Take photo
-  async takePhoto() {
-    const image = await Camera.getPhoto({
-      quality: 90,
-      resultType: CameraResultType.DataUrl,
-      source: CameraSource.Camera,
-    });
 
-    // Push taken img into img array
-    if (image.dataUrl) {
-      this.selectedImages.push(image.dataUrl);
+  async selectImage() {
+    let files = await selectImage({ multiple: true });
+    for (let file of files) {
+      let src = await compressMobilePhoto({
+        image: file,
+        mimeType: 'image/webp',
+      });
+      file = dataURItoFile(src, file);
+      this.images.push({
+        file,
+        src,
+        alt: `${file.name} (${format_byte(file.size)})`,
+      });
+      // this.selectedImages.push(src);
     }
+    // this.checkImgAvailability();
   }
 
-  // Pick photo from gallery
-  async pickPhoto() {
-    const images = await Camera.pickImages({
-      // quality: 90,
-      // width: 207,
-    });
-    const { format, webPath } = images.photos[0];
-    // const imageBlob = new Blob([webPath], { type: `image/${format}` })
-    // this.onImageSelected(format, imageBlob)
-    // fetch(webPath)
-    //   .then(response => response.blob())
-    //   .then(blobData => this.onImageSelected(format, blobData))
-    //   .catch(error => console.error(error))
-    const response = await fetch(webPath);
-    const blobData = await response.blob();
-    this.onImageSelected(format, blobData);
-
-    // Check if there are selected photos and add them to the selectedImages array
-    // if (images && images.photos && images.photos.length > 0) {
-    //   // Convert blob into buffer
-    //   this.selectedImages = images.photos.map((photo) => {
-    //     fetch(photo.webPath)
-    //       .then((response) => response.blob())
-    //       .then((blob) => {
-    //         const reader = new FileReader();
-    //         reader.onload = function () {
-    //           const arrayBuffer = reader.result; // This will be an ArrayBuffer
-    //           if (arrayBuffer) {}
-    //           const buffer = Buffer.from(arrayBuffer); // Convert ArrayBuffer to Buffer
-    //         };
-    //         reader.readAsArrayBuffer(blob);
-    //       })
-    //       .catch((error) => {
-    //         console.error('Error converting blob: ', error);
-    //       });
-    //   });
-    // }
-
-    this.checkImgAvailability();
-  }
-
-  onImageSelected(imageFormat: string, imageBlob: Blob) {
-    const reader: FileReader = new FileReader();
-    reader.onload = (e: any) => {
-      const image = new Image();
-      image.onload = () => {
-        const maxWidth: number = 207;
-        let width = image.width;
-        let height = image.height;
-
-        if (width > maxWidth) {
-          height = (maxWidth / width) * height;
-          width = maxWidth;
-        }
-
-        const canvasElement: HTMLCanvasElement = this.canvas.nativeElement;
-        this.ctx = canvasElement.getContext('2d') as CanvasRenderingContext2D;
-        canvasElement.width = width;
-        canvasElement.height = height;
-        this.ctx.drawImage(image, 0, 0, width, height);
-
-        const resizedImageData = canvasElement.toDataURL(
-          `image/${imageFormat}`
-        );
-        console.log('resizedImageData');
-        console.log(resizedImageData);
-        this.selectedImages.push(resizedImageData);
-      };
-
-      image.src = e.target.result;
-    };
-
-    reader.readAsDataURL(imageBlob);
-  }
-
-  onClickReview() {
-    let images = this.selectedImages.map((nzImg: any) => {
-      return { src: `${nzImg.toString()}` };
-    });
+  showPreview() {
+    let images: NzImage[] = this.images;
     this.nzImageService.preview(images, { nzZoom: 1.5, nzRotate: 0 });
-    this.checkImgAvailability();
   }
 
-  checkImgAvailability() {
-    if (this.selectedImages) {
-      this.isReviewBtnDisabled = false;
-    }
+  removeImage(image: Image) {
+    let index = this.images.indexOf(image);
+    if (index == -1) return;
+    this.images.splice(index, 1);
+    // this.selectedImages.splice(index, 1);
+    // this.checkImgAvailability();
   }
+
+  // checkImgAvailability() {
+  //   if (this.selectedImages.length > 0) {
+  //     this.isReviewBtnDisabled = false;
+  //   }
+  // }
 }

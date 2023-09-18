@@ -87,23 +87,24 @@ export class ReportIncidentHistoryService {
     try {
       await knex('user_report')
         .update({
-          // change user_id
+          // change user id
           user_id: '1',
           incident_id: dto.incidentType,
           date: dto.date,
           time: dto.time,
           location: dto.location,
-          latitude: dto.coordinates.lat,
-          longitude: dto.coordinates.lng,
+          latitude: dto.lat,
+          longitude: dto.lng,
           description: dto.description,
         })
         .where('id', id);
 
       await knex('image').delete().where('user_report_id', id);
 
-      for (const image of dto.image) {
+      for (const image of dto.filenames) {
         await knex('image').insert({
           user_report_id: id,
+          // TODO rename to filename
           image_string: image,
         });
       }
@@ -135,44 +136,6 @@ export class ReportIncidentHistoryService {
         return '7';
       case '其他':
         return '8';
-    }
-  }
-
-  async getReportRecordThroughPost() {
-    try {
-      const reportRecord = await knex
-        .select(
-          'user_report.id',
-          'incident_type.incident',
-          'user_report.date',
-          'user_report.time',
-          'user_report.location',
-          'user_report.description',
-          knex.raw('ARRAY_AGG(image.image_string) AS image_array'),
-        )
-        .from('user_report')
-        .leftJoin('image', 'user_report.id', 'image.user_report_id')
-        .where('user_report.user_id', '1')
-        .leftJoin(
-          'incident_type',
-          'user_report.incident_id',
-          'incident_type.id',
-        )
-        .groupBy(
-          'user_report.id',
-          'user_report.incident_id',
-          'user_report.date',
-          'user_report.time',
-          'user_report.location',
-          'user_report.description',
-          'incident_type.incident',
-        )
-        .orderBy('user_report.date', 'desc')
-        .orderBy('user_report.time', 'desc');
-      console.log('server service:', reportRecord);
-      return reportRecord;
-    } catch (error) {
-      throw Error(error);
     }
   }
 }

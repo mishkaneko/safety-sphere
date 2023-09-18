@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, Input } from '@angular/core';
 import { NzDrawerPlacement } from 'ng-zorro-antd/drawer';
+import { IncidentMapService } from 'src/app/@services/incident-map.service';
 
 @Component({
   selector: 'filter-incident',
@@ -11,10 +12,12 @@ export class FilterIncidentComponent {
   @Output() mapTypeChange = new EventEmitter<string>();
 
   visible = false;
-  placement: NzDrawerPlacement = 'right';
+  placement: NzDrawerPlacement = 'bottom';
   disabled = false;
   mapTypeRadioValue = 'showOriginal';
   incidentTypeRadioValue = 'all';
+
+  constructor(private incidentMapService: IncidentMapService) {}
 
   closeFilterDrawer(): void {
     this.visible = false;

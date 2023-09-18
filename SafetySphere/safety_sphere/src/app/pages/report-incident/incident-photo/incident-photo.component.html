@@ -1,14 +1,28 @@
-<button nz-button type="button" (click)="takePhoto()">拍照</button>
-<button nz-button type="button" (click)="pickPhoto()">上載相片</button>
-<div id="imageDiv">
-  <button
-    nz-button
-    type="button"
-    (click)="onClickReview()"
-    [disabled]="isReviewBtnDisabled"
-  >
-    相片預覽
-  </button>
+<div class="upload-image-choice-button">
+  <button nz-button nzType="default" type="button" (click)="selectImage()"><span nz-icon nzType="upload"
+      nzTheme="outline"></span>選擇相片</button>
 </div>
 
-<canvas #canvas></canvas>
+<div class="photo-list">
+  <nz-divider nzText="已上載的相片"></nz-divider>
+  <nz-list class="demo-loadmore-list">
+    <nz-list-item *ngFor="let image of images">
+      <ng-container>
+        <nz-list-item-meta>
+          <nz-list-item-meta-title>
+            <h4>{{image.alt}}</h4>
+          </nz-list-item-meta-title>
+        </nz-list-item-meta>
+        <ul nz-list-item-actions>
+          <nz-list-item-action><a (click)="removeImage(image)">刪除</a></nz-list-item-action>
+        </ul>
+      </ng-container>
+    </nz-list-item>
+  </nz-list>
+  <div class="image-review-button"><button nz-button nzType="default" type="button" (click)="showPreview()"
+      [disabled]="isReviewBtnDisabled">
+      <span nz-icon nzType="picture" nzTheme="outline"></span>相片預覽
+    </button></div>
+
+  <nz-divider></nz-divider>
+</div>

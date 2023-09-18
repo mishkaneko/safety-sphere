@@ -7,7 +7,11 @@ import {
 } from '@angular/forms';
 import { GoogleSearchComponent } from './google-search/google-search.component';
 import { IncidentPhotoComponent } from './incident-photo/incident-photo.component';
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { ReportIncidentService } from 'src/app/@services/report-incident.service';
+import {
+  NzNotificationPlacement,
+  NzNotificationService,
+} from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-report-incident',
@@ -15,6 +19,7 @@ import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
   styleUrls: ['./report-incident.component.scss'],
 })
 export class ReportIncidentComponent {
+  showReportIncidentTitle: boolean = false;
   validateForm!: UntypedFormGroup;
 
   @ViewChild(GoogleSearchComponent)
@@ -26,10 +31,12 @@ export class ReportIncidentComponent {
   constructor(
     private fb: UntypedFormBuilder,
     private apiService: ApiService,
-    private snackBar: MatSnackBar
+    private notification: NzNotificationService
   ) {}
 
   ngOnInit(): void {
+    ReportIncidentService.showReportIncidentTitle = true;
+
     // Initialize the form controls in the constructor
     this.validateForm = this.fb.group({
       incidentType: ['', [Validators.required]],
@@ -47,8 +54,7 @@ export class ReportIncidentComponent {
     const location = this.googleSearchComponent.location;
     const coordinates = this.googleSearchComponent.coordinates;
     const description = this.validateForm.get('description')!.value;
-    // const image = this.incidentPhotoComponent.selectedImages;
-    const image : any[] = [];
+    const image = this.incidentPhotoComponent.selectedImages;
 
     console.log('date:', this.validateForm.get('datePicker'));
     console.log('date.value:', this.validateForm.get('datePicker')?.value);
@@ -84,29 +90,33 @@ export class ReportIncidentComponent {
       image,
     };
 
-    // Create a custom MatSnackBarConfig
-    const snackBarConfig: MatSnackBarConfig = {
-      duration: 3000, // Duration in milliseconds
-      panelClass: ['submit-form-success-snackbar'], // CSS class for custom styling
-      verticalPosition: 'bottom', // Position at the bottom of the screen
-    };
-
-    // Clear form
-    this.validateForm.reset();
-    this.googleSearchComponent.clearSearchInput();
-
     console.log('report-incident-component: ', formObj);
 
     // Send data to service
     this.apiService.post(formObj, '/report-incident/user-report').subscribe({
       next: (response) => {
         console.log('Success:', response);
-        // Display a snackbar on success
-        this.snackBar.open('成功遞交報告', '關閉', snackBarConfig);
+
+        // TODO Clear photo area
+        // Clear form
+        this.validateForm.reset();
+        this.googleSearchComponent.clearSearchInput();
+
+        // Display notification on success
+        this.notification.success('成功遞交報告', '', {
+          nzPlacement: 'top',
+        });
       },
       error: (error) => {
+        this.notification.error('遞交報告不成功，請重試', '', {
+          nzPlacement: 'top',
+        });
         console.error('Error:', error);
       },
     });
+  }
+
+  ngOnDestroy() {
+    ReportIncidentService.showReportIncidentTitle = false;
   }
 }
