@@ -7,7 +7,6 @@ export class IncidentMapController {
   @Get('user-report')
   async getUserReport() {
     let userReportArr = await this.incidentMapService.getUserReport();
-    console.log(userReportArr);
 
     // Convert date and time
     for (let userReport of userReportArr) {

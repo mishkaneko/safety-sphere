@@ -26,7 +26,6 @@ export class IncidentMapService {
           'user_report.incident_id',
           'incident_type.id',
         )
-        .where('user_report.user_id', '1')
         .groupBy(
           'user_report.id',
           'user_report.incident_id',

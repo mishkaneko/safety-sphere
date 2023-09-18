@@ -96,6 +96,7 @@ export class IncidentMapComponent implements AfterViewInit {
         } else {
           this.createMarkersForUserReport(map, this.userReportList);
         }
+        console.log('this.userReportList: ', this.userReportList);
       },
       (error: any) => {
         console.error('Error fetching data: ', error);
