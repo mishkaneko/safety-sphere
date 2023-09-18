@@ -15,12 +15,16 @@ export class FollowService {
   }
 
   async findAllEmergContact (currentUserUuid: string) {
+    console.log('currentUserUuid')
+    console.log(currentUserUuid)
     return await knex('user as u')
-      .select(knex.raw(`json_agg(jsonb_build_object('emerg_contact_uuid', ec.emerg_contact_uuid, 'emerg_contact_email', uc.email)) as emerg_contacts`))
-      .leftJoin('emerg_contact as ec', 'u.user_uuid', 'ec.current_user_uuid')
-      .leftJoin('user as uc', 'ec.emerg_contact_uuid', 'uc.user_uuid')
-      .where('u.user_uuid', currentUserUuid)
-      .groupBy('u.user_uuid', 'u.user_name', 'u.email')
+    .select(knex.raw(`json_agg(jsonb_build_object('emerg_contact_uuid', ec.emerg_contact_uuid, 'emerg_contact_email', uc.email)) as emerg_contacts`))
+    .leftJoin('emerg_contact as ec', 'u.user_uuid', 'ec.current_user_uuid')
+    .leftJoin('user as uc', 'ec.emerg_contact_uuid', 'uc.user_uuid')
+    // .where('u.user_uuid', '07c23ed490b495bdd6fc0acedc702ff2faf75aa7')
+    .where('u.user_uuid', currentUserUuid)
+    .groupBy('u.user_uuid', 'u.user_name', 'u.email')
+  
   }
 
   async deleteFollow (deleteFollowDto: DeleteFollowDto) {

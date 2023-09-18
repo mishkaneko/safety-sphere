@@ -8,6 +8,7 @@ import { NewsIncidentModule } from './news-incident/news-incident.module';
 import { LoginModule } from './login/login.module';
 import { FollowModule } from './follow/follow.module';
 import { EscapeRouteGateway } from './escape-route/escape-route.gateway';
+import { UserPositionService } from './user-position/user-position.service';
 
 @Module({
   imports: [
@@ -16,11 +17,12 @@ import { EscapeRouteGateway } from './escape-route/escape-route.gateway';
     IncidentMapModule,
     NewsIncidentModule,
     LoginModule,
-    FollowModule,
+    FollowModule
   ],
   controllers: [AppController],
   providers: [
     AppService,
+    UserPositionService,
     //  EscapeRouteGateway
   ],
 })

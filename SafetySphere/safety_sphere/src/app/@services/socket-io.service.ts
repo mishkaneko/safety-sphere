@@ -8,13 +8,14 @@ import { map } from 'rxjs/operators';
 })
 export class SocketIoService {
 
-  constructor(private socket: Socket) { }
+  constructor(private socket: Socket) {
+   }
 
   sendMessage(event: string,  msg: any) {
     this.socket.emit(event, msg);
   }
   getMessage(event: string) {
-    return this.socket.fromEvent('message').pipe(map((data:any) => data.msg));
+    return this.socket.fromEvent(event).pipe(map((data:any) => data.msg));
   }
 
 }

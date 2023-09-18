@@ -1,0 +1,69 @@
+# Visualize on https://erd.surge.sh
+# or https://quick-erd.surge.sh
+#
+# Relationship Types
+#  -    - one to one
+#  -<   - one to many
+#  >-   - many to one
+#  >-<  - many to many
+#  -0   - one to zero or one
+#  0-   - zero or one to one
+#  0-0  - zero or one to zero or one
+#  -0<  - one to zero or many
+#  >0-  - zero or many to one
+#
+////////////////////////////////////
+
+
+incident_type
+-------------
+id integer PK
+incident varchar(255)
+
+
+user
+----
+id integer PK
+user_uuid varchar(255) unique
+email varchar(255)
+user_name varchar(255) NULL
+
+
+news_report
+-----------
+id integer PK
+incident_id integer FK >- incident_type.id
+location varchar(255)
+latitude real NULL
+longitude real NULL
+title varchar(255)
+source varchar(255)
+summary varchar(255)
+website varchar(255)
+
+
+user_report
+-----------
+id integer PK
+user_id integer FK >- user.id
+incident_id integer FK >- incident_type.id
+date timestamp
+time timestamp
+location varchar(255)
+longitude real
+latitude real
+description varchar(255)
+
+
+image
+-----
+id integer PK
+user_report_id integer
+image_string text
+
+
+emerg_contact
+-------------
+id integer PK
+current_user_uuid varchar(255) FK >- user.user_uuid
+emerg_contact_uuid varchar(255) FK >- user.user_uuid
