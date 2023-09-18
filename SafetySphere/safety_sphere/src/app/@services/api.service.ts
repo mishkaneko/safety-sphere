@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -21,9 +21,18 @@ export class ApiService {
     return this.http.post(apiUrl, data);
   }
 
-  get(path: string) {
+  get(path: string, user_uuid?: any) {
     const apiUrl = `${this.apiOrigin}${path}`;
-    return this.http.get(apiUrl);
+
+    // Create an instance of HttpParams
+    let params = new HttpParams();
+
+    // Check if user_uuid is provided and add it as a query parameter
+    if (user_uuid) {
+      params = params.set('user_uuid', user_uuid);
+    }
+
+    return this.http.get(apiUrl, { params });
   }
 
   put(data: any, path: string) {

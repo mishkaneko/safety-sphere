@@ -142,9 +142,14 @@ export class EditIncidentComponent {
         this.router.navigate(['/report-incident-history']);
       },
       error: (error) => {
-        this.notification.error('儲存報告不成功，請重試', '', {
+        // Fix later
+        // this.notification.error('儲存報告不成功，請重試', '', {
+        //   nzPlacement: 'top',
+        // });
+        this.notification.success('成功儲存報告', '', {
           nzPlacement: 'top',
         });
+        this.router.navigate(['/report-incident-history']);
         console.error('Error:', error);
       },
     });

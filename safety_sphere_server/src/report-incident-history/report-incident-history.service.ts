@@ -6,8 +6,13 @@ import { CreateIncidentReportDto } from 'src/report-incident/report-incident.dto
 export class ReportIncidentHistoryService {
   constructor() {}
 
-  async getReportRecord() {
+  async getReportRecord(userUuid) {
     try {
+      let user_id: any = await knex('user')
+        .select('id')
+        .from('user')
+        .where('user_uuid', userUuid);
+
       const reportRecord = await knex
         .select(
           'user_report.id',
@@ -20,7 +25,7 @@ export class ReportIncidentHistoryService {
         )
         .from('user_report')
         .leftJoin('image', 'user_report.id', 'image.user_report_id')
-        .where('user_report.user_id', '1')
+        .where('user_report.user_id', user_id[0].id)
         .leftJoin(
           'incident_type',
           'user_report.incident_id',
@@ -58,7 +63,6 @@ export class ReportIncidentHistoryService {
         )
         .from('user_report')
         .leftJoin('image', 'user_report.id', 'image.user_report_id')
-        .where('user_report.user_id', '1')
         .leftJoin(
           'incident_type',
           'user_report.incident_id',
@@ -87,8 +91,6 @@ export class ReportIncidentHistoryService {
     try {
       await knex('user_report')
         .update({
-          // change user id
-          user_id: '1',
           incident_id: dto.incidentType,
           date: dto.date,
           time: dto.time,

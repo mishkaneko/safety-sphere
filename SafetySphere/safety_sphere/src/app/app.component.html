@@ -68,10 +68,6 @@
         <a routerLink="/report-incident-history" (click)="isCollapsed = true">我的報告記錄</a>
       </li>
 
-      <li nz-menu-item nzMatchRouter>
-        <a routerLink="/user-profile" (click)="isCollapsed = true">我的個人資料</a>
-      </li>
-
       <li nz-menu-item nzMatchRouter [hidden]="!appStatusService.isLogin">
         <a routerLink="/follow" (click)="isCollapsed = true">追蹤中</a>
       </li>

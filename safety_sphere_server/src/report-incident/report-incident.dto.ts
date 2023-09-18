@@ -36,6 +36,8 @@ export class CreateIncidentReportDto {
   // @IsArray()
   // image: string[];
   filenames: string[];
+
+  user_uuid;
 }
 
 // export let createIncidentReportParser = object({

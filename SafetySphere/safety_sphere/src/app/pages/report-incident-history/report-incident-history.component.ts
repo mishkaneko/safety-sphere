@@ -2,6 +2,7 @@ import { HistoryService } from 'src/app/@services/history.service';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from 'src/app/@services/api.service';
+import { Preferences } from '@capacitor/preferences';
 
 interface ReportRecordList {
   id: number;
@@ -24,19 +25,23 @@ export class ReportIncidentHistoryComponent {
 
   constructor(private apiService: ApiService, private router: Router) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     HistoryService.showReportIncidentHistoryTitle = true;
 
-    this.apiService.get('/report-incident-history/report-record').subscribe({
-      next: (data: any) => {
-        console.log('component:', data);
-        this.reportRecordList = data;
-        console.log('reportRecordList: ', this.reportRecordList);
-      },
-      error: (error) => {
-        console.error('Error fetching data:', error);
-      },
-    });
+    const { value } = await Preferences.get({ key: 'user_uuid' });
+
+    this.apiService
+      .get('/report-incident-history/report-record', value)
+      .subscribe({
+        next: (data: any) => {
+          console.log('component:', data);
+          this.reportRecordList = data;
+          console.log('reportRecordList: ', this.reportRecordList);
+        },
+        error: (error) => {
+          console.error('Error fetching data:', error);
+        },
+      });
   }
 
   editIncident(recordId: number) {

@@ -14,7 +14,9 @@ const routes: Routes = [
   {
     path: 'escape-route',
     loadChildren: () =>
-      import('./pages/escape-route/escape-route.module').then((m) => m.EscapeRouteModule),
+      import('./pages/escape-route/escape-route.module').then(
+        (m) => m.EscapeRouteModule
+      ),
   },
 
   {
@@ -40,15 +42,6 @@ const routes: Routes = [
         './pages/report-incident-history/report-incident-history.module'
       ).then((m) => m.ReportIncidentHistoryModule),
   },
-
-  {
-    path: 'user-profile',
-    loadChildren: () =>
-      import('./pages/user-profile/user-profile.module').then(
-        (m) => m.UserProfileModule
-      ),
-  },
-
   {
     path: 'follow',
     loadChildren: () =>
@@ -61,10 +54,12 @@ const routes: Routes = [
       {
         path: 'aaa@gmail.com',
         loadChildren: () =>
-        import('./pages/ask-for-help/ask-for-help.module').then((m) => m.AskForHelpModule),
-      }
+          import('./pages/ask-for-help/ask-for-help.module').then(
+            (m) => m.AskForHelpModule
+          ),
+      },
     ],
-  }
+  },
 ];
 
 @NgModule({
