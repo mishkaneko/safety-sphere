@@ -8,13 +8,14 @@ import { AppStatusService } from './@services/app-status.service';
 import { IncidentMapService } from 'src/app/@services/incident-map.service';
 import { HistoryService } from 'src/app/@services/history.service';
 import { ReportIncidentService } from './@services/report-incident.service';
+import { SocketIoService } from './@services/socket-io.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   protected isCollapsed = true;
   // protected userEmail!: string
   // protected userName!: string
@@ -27,10 +28,19 @@ export class AppComponent {
   constructor(
     private alarmService: AlarmService,
     private nearbyPlacesService: NearbyPlacesService,
-    protected appStatusService: AppStatusService
-  ) // private apiService: ApiService
+    protected appStatusService: AppStatusService,
+    private socketIoService: SocketIoService
+  ){}
 
-  {}
+  ngOnInit() {
+    this.socketIoService.getMessage('broadcastTest').subscribe({
+      next: (response: any) => {
+        console.log('broadcastTest response')
+        console.log(response)
+      },
+      error: error => console.error(error)
+    })
+  }
 
   get isEscaping() {
     return this.nearbyPlacesService.isEscaping;

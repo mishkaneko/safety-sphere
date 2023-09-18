@@ -10,9 +10,13 @@ export class NearbyPlacesService {
   constructor(private googleMapService:GoogleMapService) { }
 
   // static isEscaping: boolean = false
-  isEscaping: boolean = false
-  // get isEscaping(){return NearbyPlacesService.isEscaping}
-  // set isEscaping(value:boolean){NearbyPlacesService.isEscaping=value}
+  _isEscaping: boolean = false
+  get isEscaping () {
+    return this._isEscaping
+  }
+  set isEscaping (value:boolean) {
+    this._isEscaping = value
+  }
 
   static map: google.maps.Map | null
 
@@ -25,8 +29,7 @@ export class NearbyPlacesService {
 
   static escapeRoute: { route: any, polyLines: google.maps.Polyline[] } = { route: null, polyLines: [] }
 
-  static placesService=
-  createDefer<google.maps.places.PlacesService>()
+  static placesService=createDefer<google.maps.places.PlacesService>()
 
   static userMarker: google.maps.Marker | null
 
@@ -183,6 +186,8 @@ export class NearbyPlacesService {
           //   });
           // }
         }
+
+        
       } else {
         console.error('Directions error', status);
       }

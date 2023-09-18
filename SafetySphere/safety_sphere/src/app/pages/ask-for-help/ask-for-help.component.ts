@@ -39,7 +39,7 @@ export class AskForHelpComponent implements OnInit , OnDestroy {
       await this.onStart()
     })
 
-    this.socketIoService.sendMessage('addCart', 'Hello Socket.io!')
+    this.socketIoService.sendMessage('hello', 'Hello Socket.io!')
   }
 
   private async onStart() {
@@ -51,7 +51,7 @@ export class AskForHelpComponent implements OnInit , OnDestroy {
     await this.createLocateButton()
 
     // 執行地點搜索
-    if(this.nearbyPlacesService.isEscaping) this.nearbyPlacesService.searchNearbyPlaces()
+    // if(this.nearbyPlacesService.isEscaping) this.nearbyPlacesService.searchNearbyPlaces()
   }
 
   private async initMap() {

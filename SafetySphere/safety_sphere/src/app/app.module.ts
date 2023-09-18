@@ -28,7 +28,7 @@ import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 // import { NzInputModule } from 'ng-zorro-antd/input';
 
 const config: SocketIoConfig = { url: 'http://localhost:4000', options: {
-  withCredentials: true
+  
 } };
 
 registerLocaleData(zh);
