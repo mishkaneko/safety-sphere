@@ -1,6 +1,17 @@
 import { CreateIncidentReportDto } from 'src/report-incident/report-incident.dto';
 import { ReportIncidentHistoryService } from './report-incident-history.service';
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Put,
+  UploadedFiles,
+  UseInterceptors,
+} from '@nestjs/common';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import multer from 'multer';
+import { randomUUID } from 'crypto';
 
 @Controller('report-incident-history')
 export class ReportIncidentHistoryController {
@@ -43,4 +54,36 @@ export class ReportIncidentHistoryController {
       id,
     );
   }
+
+  // @Put('edit-incident/:id')
+  // @UseInterceptors(
+  //   FilesInterceptor('images', 20, {
+  //     storage: multer.diskStorage({
+  //       destination: 'uploads/user-report-image',
+  //       filename(req, file, callback) {
+  //         // file.originalname.split('.').pop()
+  //         let extname = file.mimetype.split('/').pop().split('.').pop();
+  //         let filename = randomUUID() + '.' + extname;
+  //         callback(null, filename);
+  //       },
+  //     }),
+  //     limits: {
+  //       fileSize: 20 * 1024 ** 2,
+  //     },
+  //     fileFilter(req, file, callback) {
+  //       callback(null, file.mimetype.startsWith('image/'));
+  //     },
+  //   }),
+  // )
+  // updateSpecificReportRecord(
+  //   @UploadedFiles() images: Express.Multer.File[],
+  //   @Body() createIncidentReportDto: CreateIncidentReportDto,
+  //   @Param('id') id: number,
+  // ) {
+  //   createIncidentReportDto.filenames = images.map((file) => file.filename);
+  //   return this.reportIncidentHistoryService.updateSpecificReportRecord(
+  //     createIncidentReportDto,
+  //     id,
+  //   );
+  // }
 }

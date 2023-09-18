@@ -26,12 +26,14 @@ export class ReportIncidentService {
     console.log(userReportId);
 
     console.log('store images:', dto.filenames);
-    for (const image of dto.filenames) {
-      await knex('image').insert({
-        user_report_id: userReportId.id,
-        // TODO rename to filename
-        image_string: image,
-      });
+    if (dto.filenames.length > 0) {
+      for (const image of dto.filenames) {
+        await knex('image').insert({
+          user_report_id: userReportId.id,
+          // TODO rename to filename
+          image_string: image,
+        });
+      }
     }
 
     return { message: 'successfully inserted user_report into db' };

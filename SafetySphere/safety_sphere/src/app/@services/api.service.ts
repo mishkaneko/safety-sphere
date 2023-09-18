@@ -9,8 +9,9 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
-  upload() {
-    this.http.post();
+  upload(data: FormData, path: string) {
+    const apiUrl = `${this.apiOrigin}${path}`;
+    return this.http.post(apiUrl, data);
   }
 
   post(data: any, path: string) {
@@ -30,5 +31,9 @@ export class ApiService {
     // Sends put request to server
     console.log('service:', data);
     return this.http.put(apiUrl, data);
+  }
+
+  toReportImageUrl(filename: string) {
+    return this.apiOrigin + '/uploads/user-report-image/' + filename;
   }
 }

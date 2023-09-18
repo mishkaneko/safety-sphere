@@ -4,24 +4,26 @@ import { print } from 'listening-on';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as express from 'express';
-import * as http from 'http'
-import * as cors from 'cors'
-import * as socketIO from 'socket.io'
+import * as http from 'http';
+import * as cors from 'cors';
+import * as socketIO from 'socket.io';
 import { ExpressAdapter } from '@nestjs/platform-express';
-import * as ioRegister from './io'
+import * as ioRegister from './io';
 
 async function bootstrapServer() {
-  const app = express()
-  app.use(cors())
+  const app = express();
+  app.use(cors());
 
-  const server = new http.Server(app)
-  const io = new socketIO.Server(server, {cors: {}})
-  ioRegister.setServer(io)
+  app.use('/uploads', express.static('uploads'));
 
-  await bootstrapApp(new ExpressAdapter(app))
+  const server = new http.Server(app);
+  const io = new socketIO.Server(server, { cors: {} });
+  ioRegister.setServer(io);
+
+  await bootstrapApp(new ExpressAdapter(app));
 
   let port = 4000;
-  server.listen(port,()=>{
+  server.listen(port, () => {
     print(port);
   });
 }
@@ -29,7 +31,7 @@ async function bootstrapServer() {
 async function bootstrapApp(expressAdapter: ExpressAdapter) {
   const app = await NestFactory.create(AppModule, expressAdapter);
 
-  await app.init() // NOTE need to add this line
+  await app.init(); // NOTE need to add this line
 
   // Enables CORS support for app, making it accessible to web clients hosted on different domains or ports
   // app.enableCors();
@@ -44,7 +46,6 @@ async function bootstrapApp(expressAdapter: ExpressAdapter) {
   // await app.listen(port)
   // print(port);
 }
-
 
 function setupSwagger(app: INestApplication) {
   const builder = new DocumentBuilder();

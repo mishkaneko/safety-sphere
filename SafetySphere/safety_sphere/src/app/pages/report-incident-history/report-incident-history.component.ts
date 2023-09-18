@@ -10,7 +10,7 @@ interface ReportRecordList {
   time: string;
   location: string;
   description: string;
-  image_array: any[];
+  image_array: string[];
 }
 
 @Component({
@@ -25,7 +25,6 @@ export class ReportIncidentHistoryComponent {
   constructor(private apiService: ApiService, private router: Router) {}
 
   ngOnInit(): void {
-
     HistoryService.showReportIncidentHistoryTitle = true;
 
     this.apiService.get('/report-incident-history/report-record').subscribe({

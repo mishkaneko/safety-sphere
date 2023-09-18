@@ -47,53 +47,35 @@ export class ReportIncidentComponent {
   }
 
   onSubmit() {
-    // // Access form values using the FormGroup
-    const incidentType = this.validateForm.get('incidentType')!.value;
-    const date: Date = this.validateForm.get('datePicker')!.value;
-    const time: Date = this.validateForm.get('timePicker')!.value;
-    const location = this.googleSearchComponent.location;
-    const coordinates = this.googleSearchComponent.coordinates;
-    const description = this.validateForm.get('description')!.value;
-    const image = this.incidentPhotoComponent.selectedImages;
+    let formData = new FormData();
 
-    console.log('date:', this.validateForm.get('datePicker'));
-    console.log('date.value:', this.validateForm.get('datePicker')?.value);
+    console.log(this.validateForm.get('datePicker')!.value);
 
-    console.log('time:', this.validateForm.get('timePicker'));
-    console.log('time.value:', this.validateForm.get('timePicker')?.value);
-
-    Object.assign(window, {
-      date: this.validateForm.get('datePicker')?.value,
-      time: this.validateForm.get('timePicker')?.value,
-    });
-
-    let timestamp = new Date();
-    timestamp.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
-    timestamp.setHours(
-      time.getHours(),
-      time.getMinutes(),
-      time.getSeconds(),
-      0
+    formData.set('incidentType', this.validateForm.get('incidentType')!.value);
+    formData.set(
+      'date',
+      this.validateForm.get('datePicker')!.value.toISOString()
     );
+    formData.set(
+      'time',
+      this.validateForm.get('timePicker')!.value.toISOString()
+    );
+    formData.set('location', this.googleSearchComponent.location);
 
-    console.log('timestamp:', timestamp);
-    console.log('timestamp.isoString:', timestamp.toISOString());
-    console.log('timestamp.time:', timestamp.getTime());
+    const coordinates = this.googleSearchComponent.coordinates;
+    formData.set('lat', coordinates.lat!.toString());
+    formData.set('lng', coordinates.lng!.toString());
 
-    const formObj = {
-      incidentType,
-      date,
-      time,
-      location,
-      coordinates,
-      description,
-      image,
-    };
+    formData.set('description', this.validateForm.get('description')!.value);
 
-    console.log('report-incident-component: ', formObj);
+    for (let image of this.incidentPhotoComponent.images) {
+      formData.append('images', image.file);
+    }
+
+    console.log('report-incident-component: ', formData);
 
     // Send data to service
-    this.apiService.post(formObj, '/report-incident/user-report').subscribe({
+    this.apiService.upload(formData, '/report-incident/user-report').subscribe({
       next: (response) => {
         console.log('Success:', response);
 
