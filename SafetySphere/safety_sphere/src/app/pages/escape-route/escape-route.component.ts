@@ -9,25 +9,28 @@ import { AlarmService } from '../../@services/alarm.service'
 })
 
 export class EscapeRouteComponent implements OnInit, OnDestroy {
-  protected NearbyPlacesService = NearbyPlacesService
-  protected nearbyPlacesService!: NearbyPlacesService
   // protected isEscaping: boolean = NearbyPlacesService.isEscaping
 
-  constructor (private alarmService: AlarmService) {
-    this.nearbyPlacesService = new NearbyPlacesService()
+  constructor (private alarmService: AlarmService,
+    private nearbyPlacesService :NearbyPlacesService
+    
+    ) {
   }
   ngOnInit() {
-    this.alarmService.init()
   }
 
   protected onStartEscape () {
-    NearbyPlacesService.isEscaping = true
+    this.nearbyPlacesService.isEscaping = true
     // this.isEscaping = NearbyPlacesService.isEscaping
     this.nearbyPlacesService.onRestart()
   }
 
   ngOnDestroy() {
-    NearbyPlacesService.isEscaping = false
+    this.nearbyPlacesService.isEscaping = false
     this.alarmService.destroy()
+  }
+
+  get isEscaping(){
+    return this.nearbyPlacesService.isEscaping
   }
 }

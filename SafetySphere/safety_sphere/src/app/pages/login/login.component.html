@@ -3,18 +3,18 @@
     <nz-form-item>
       <nz-form-control nzErrorTip="請輸入您的Email!">
         <nz-input-group nzPrefixIcon="mail">
-          <input type="text" nz-input [(ngModel)]="emailInput" formControlName="email" placeholder="Email" />
+          <input type="text" nz-input formControlName="email" placeholder="Email" />
         </nz-input-group>
       </nz-form-control>
     </nz-form-item>
 
-    <nz-form-item>
+    <!-- <nz-form-item>
       <nz-form-control nzErrorTip="請輸入您的密碼!">
         <nz-input-group nzPrefixIcon="lock">
           <input type="password" nz-input formControlName="password" placeholder="密碼" />
         </nz-input-group>
       </nz-form-control>
-    </nz-form-item>
+    </nz-form-item> -->
 
     <nz-form-item>
       <nz-form-label
@@ -27,33 +27,36 @@
       >
         驗證碼
       </nz-form-label>
+
       <nz-form-control
         [nzSm]="14"
         [nzXs]="24"
         nzErrorTip="請輸入驗證碼!"
-        nzExtra="驗證碼已傳送到您的Email。"
+        [nzExtra]="isClickedGetVerificationCode ? '驗證碼已傳送到您的Email。' : ''"
       >
         <div nz-row [nzGutter]="8">
           <div nz-col [nzSpan]="12">
             <input nz-input formControlName="verificationCode" id="verificationCode" />
           </div>
-          <div nz-col [nzSpan]="12">
-            <button nz-button (click)="getverificationCode($event)">獲取驗證碼</button>
+          <div nz-col [nzSpan]="12" [ngSwitch]="countdown">
+            <button *ngSwitchCase="0" nz-button (click)="getVerificationCode($event); isClickedGetVerificationCode = true" [disabled]="!validateForm.valid">獲取驗證碼</button>
+            
+            <button *ngSwitchDefault nz-button [disabled]="true">{{countdown}}秒後再獲取驗證碼</button>
           </div>
         </div>
       </nz-form-control>
     </nz-form-item>
 
-    <div nz-row class="login-form-margin">
-      <!-- <div nz-col [nzSpan]="12">
+    <!-- <div nz-row class="login-form-margin">
+      <div nz-col [nzSpan]="12">
         <label nz-checkbox formControlName="remember">
           <span>Remember me</span>
         </label>
-      </div> -->
+      </div>
       <div nz-col>
         <a class="login-form-forgot">忘記密碼</a>
       </div>
-    </div>
+    </div> -->
 
     <button nz-button class="login-form-button login-form-margin" [nzType]="'primary'">註冊 / 登入</button>
     <!-- Or

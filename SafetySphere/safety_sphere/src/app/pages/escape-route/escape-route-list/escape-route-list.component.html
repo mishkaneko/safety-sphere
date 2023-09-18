@@ -36,11 +36,11 @@
           [class]="{ placeSelected: isThePlaceSelected(placeCollection.place.place_id) }"
           (click)="switchPlace(placeCollection)"
         >
-            <nz-list-item-meta
-              nzAvatar="https://cdn-icons-png.flaticon.com/512/1574/1574014.png"
-              [nzTitle]="placeCollection.place.name"
-              [nzDescription]="reformPlaceType(placeCollection.place.types![0])"
-            />
+          <nz-list-item-meta
+            nzAvatar="https://cdn-icons-png.flaticon.com/512/1574/1574014.png"
+            [nzTitle]="placeCollection.place.name"
+            [nzDescription]="reformPlaceType(placeCollection.place.types![0])"
+          />
   
           <nz-list-item-meta
             class="list-item-meta-right-side"

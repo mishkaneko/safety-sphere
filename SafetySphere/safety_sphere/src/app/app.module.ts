@@ -21,6 +21,15 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { LoginModule } from './pages/login/login.module'
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzTimePickerModule } from 'ng-zorro-antd/time-picker';
+import { FollowModule } from './pages/follow/follow.module';
+import { AskForHelpModule } from './pages/ask-for-help/ask-for-help.module';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+// import { NzModalModule } from 'ng-zorro-antd/modal';
+// import { NzInputModule } from 'ng-zorro-antd/input';
+
+const config: SocketIoConfig = { url: 'http://localhost:4000', options: {
+  withCredentials: true
+} };
 
 registerLocaleData(zh);
 
@@ -43,7 +52,12 @@ registerLocaleData(zh);
     NzSelectModule,
     LoginModule,
     NzDatePickerModule,
-    NzTimePickerModule
+    NzTimePickerModule,
+    FollowModule,
+    AskForHelpModule,
+    SocketIoModule.forRoot(config)
+    // NzModalModule,
+    // NzInputModule
   ],
   providers: [{ provide: NZ_I18N, useValue: zh_TW }],
   bootstrap: [AppComponent],

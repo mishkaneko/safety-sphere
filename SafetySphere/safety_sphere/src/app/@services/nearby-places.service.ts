@@ -1,3 +1,5 @@
+import { createDefer } from '@beenotung/tslib/async/defer';
+import { GoogleMapService } from './../google-map.service';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
@@ -5,9 +7,12 @@ import { Subject } from 'rxjs';
   providedIn: 'root'
 })
 export class NearbyPlacesService {
-  constructor() { }
+  constructor(private googleMapService:GoogleMapService) { }
 
-  static isEscaping: boolean = false
+  // static isEscaping: boolean = false
+  isEscaping: boolean = false
+  // get isEscaping(){return NearbyPlacesService.isEscaping}
+  // set isEscaping(value:boolean){NearbyPlacesService.isEscaping=value}
 
   static map: google.maps.Map | null
 
@@ -20,37 +25,49 @@ export class NearbyPlacesService {
 
   static escapeRoute: { route: any, polyLines: google.maps.Polyline[] } = { route: null, polyLines: [] }
 
-  static placesService: google.maps.places.PlacesService | null
+  static placesService=
+  createDefer<google.maps.places.PlacesService>()
 
   static userMarker: google.maps.Marker | null
 
-  static userLatLng: { lat:number | null, lng:number | null } = { lat: null, lng: null }
+  static userLatLng = createDefer<{ lat:number , lng:number }>()
+  static setUserLatLng(pos: { lat:number , lng:number }) {
+    this.userLatLng.resolve(pos)
+    this.userLatLng.promise.then(x=>Object.assign(x,pos))
+  }
+
 
   static nearbyPlaces$ = new Subject();
 
   static restart$ = new Subject();
 
-  directionsService = new google.maps.DirectionsService();
+  directionsServicePromise = this.googleMapService.googleDefer.promise.then(google=> new google.maps.DirectionsService())
 
   // 執行地點搜索
   async searchNearbyPlaces () {
+    let google = await this.googleMapService.googleDefer.promise
+    let placesService = await NearbyPlacesService.placesService.promise
+
     const types = [
       'convenience_store', 'fire_station', 'gas_station', 'hospital', 'police', 'subway_station', 'train_station'
     ]
 
-    // 使用Google Maps Places API等進行地點搜索
-    const request: google.maps.places.PlaceSearchRequest = {
-      location: new google.maps.LatLng(NearbyPlacesService.userLatLng.lat as number, NearbyPlacesService.userLatLng.lng as number),
-      // radius: 5000, // Search within a 5000-meter radius
-      // type: 'convenience_store', // Search for convenience_store
-      openNow: true, // Only show places that are currently open
-      rankBy: google.maps.places.RankBy.DISTANCE  // Specifies the ranking method to use when returning results. Note that when rankBy is set to DISTANCE, you must specify a location but you cannot specify a radius or bounds.
-    };
+    
 
     await Promise.all(types.map(async type => {
+      let userLatLng = await NearbyPlacesService.userLatLng.promise
       await new Promise<void>(resolve => {
-        request.type = type
-        NearbyPlacesService.placesService!.nearbySearch(request, (results: any, status: google.maps.places.PlacesServiceStatus) => {
+      // 使用Google Maps Places API等進行地點搜索
+      const request: google.maps.places.PlaceSearchRequest = {
+          type,
+        location: new google.maps.LatLng(userLatLng.lat , userLatLng.lng),
+        // radius: 5000, // Search within a 5000-meter radius
+        // type: 'convenience_store', // Search for convenience_store
+        openNow: true, // Only show places that are currently open
+        rankBy: google.maps.places.RankBy.DISTANCE  // Specifies the ranking method to use when returning results. Note that when rankBy is set to DISTANCE, you must specify a location but you cannot specify a radius or bounds.
+      };
+
+        placesService.nearbySearch(request, (results: any, status: google.maps.places.PlacesServiceStatus) => {
           if (status === google.maps.places.PlacesServiceStatus.OK) {
             // const destinationLatLng = { lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng() }
             // const destination = new google.maps.LatLng(destinationLatLng.lat, destinationLatLng.lng)
@@ -108,14 +125,17 @@ export class NearbyPlacesService {
     resolve()
   }
 
-  calculateRoute (destination:google.maps.LatLng) {
+  async calculateRoute (destination:google.maps.LatLng) {
+    let google = await this.googleMapService.googleDefer.promise
+    let userLatLng = await NearbyPlacesService.userLatLng.promise
     const request = {
-      origin: new google.maps.LatLng(NearbyPlacesService.userLatLng.lat as number, NearbyPlacesService.userLatLng.lng as number),
+      origin: new google.maps.LatLng(userLatLng.lat, userLatLng.lng),
       destination,
       travelMode: google.maps.TravelMode.WALKING
     };
 
-    this.directionsService.route(request, (result:any, status:any) => {
+    let directionsService = await this.directionsServicePromise
+    directionsService.route(request, (result:any, status:any) => {
       if (status === 'OK') {
         NearbyPlacesService.escapeRoute.route = result.routes[0]
         if (NearbyPlacesService.escapeRoute.polyLines) NearbyPlacesService.escapeRoute.polyLines.length = 0
@@ -179,8 +199,8 @@ export class NearbyPlacesService {
     NearbyPlacesService.places.length = 0
     NearbyPlacesService.destination = { place_id: '', lat: 0, lng: 0 }
     NearbyPlacesService.escapeRoute = { route: null, polyLines: [] }
-    NearbyPlacesService.placesService = null
+    // NearbyPlacesService.placesService = null // TODO check if need to reset this
     NearbyPlacesService.userMarker = null
-    NearbyPlacesService.userLatLng = { lat: null, lng: null }
+    // NearbyPlacesService.userLatLng = null // TODO check if need to reset this
   }
 }

@@ -17,7 +17,8 @@
       </div>
     </div>
 
-    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed" (click)="isCollapsed = true">
+    <!-- (click)="isCollapsed = true" -->
+    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
       <!-- <li nz-submenu nzOpen nzTitle="Dashboard" nzIcon="dashboard">
         <ul>
           <li nz-menu-item nzMatchRouter>
@@ -39,35 +40,88 @@
         </ul>
       </li> -->
 
+      <!-- <li nz-menu-item *ngIf="appStatusService.isLogin">
+          <strong [class]="{ nickname: !userName }" (click)="openUpdateUserNameModal = true">{{userName || '新增您的昵稱'}}</strong>
+      </li> -->
+
+      <li nz-menu-item nzMatchRouter [ngSwitch]="appStatusService.isLogin">
+        <a *ngSwitchCase="false" routerLink="/login" class="login" (click)="isCollapsed = true">注册/登入</a>
+        <h3 style="color: white;" *ngSwitchCase="true">{{appStatusService.userEmail}}</h3>
+      </li>
+      <!-- <li nz-menu-item nzMatchRouter>
+        <a routerLink="/login" class="login" (click)="isCollapsed = true">注册/登入</a>
+      </li> -->
+
       <li nz-menu-item nzMatchRouter>
-        <a routerLink="/login" class="login">注册/登入</a>
+        <a routerLink="/escape-route" (click)="isCollapsed = true">求助路線</a>
       </li>
 
       <li nz-menu-item nzMatchRouter>
-        <a routerLink="/escape-route">Escape route</a>
+        <a routerLink="/incident-map" (click)="isCollapsed = true">事件地圖</a>
       </li>
 
       <li nz-menu-item nzMatchRouter>
-        <a routerLink="/incident-map">事件地圖</a>
+        <a routerLink="/report-incident" (click)="isCollapsed = true">報告事件</a>
       </li>
+
       <li nz-menu-item nzMatchRouter>
-        <a routerLink="/report-incident">報告事件</a>
+        <a routerLink="/report-incident-history" (click)="isCollapsed = true">我的報告記錄</a>
       </li>
+
       <li nz-menu-item nzMatchRouter>
-        <a routerLink="/report-incident-history">我的報告記錄</a>
+        <a routerLink="/user-profile" (click)="isCollapsed = true">我的個人資料</a>
       </li>
-      <li nz-menu-item nzMatchRouter>
-        <a routerLink="/user-profile">我的個人資料</a>
+
+      <li nz-menu-item nzMatchRouter [hidden]="!appStatusService.isLogin">
+        <a routerLink="/follow" (click)="isCollapsed = true">追蹤中</a>
+      </li>
+
+      <li nz-submenu nzTitle="求助中" nzIcon="warning" style="color: red;">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/ask-for-help/aaa@gmail.com" (click)="isCollapsed = true">aaa@gmail.com</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a>Monitor</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a>Workplace</a>
+          </li>
+        </ul>
       </li>
     </ul>
   </nz-sider>
+
+  <!-- <nz-modal
+    [(nzVisible)]="openUpdateUserNameModal"
+    nzTitle="新增 / 修改您的昵稱"
+    (nzOnCancel)="openUpdateUserNameModal = false; userNameTypeIn = null"
+    (nzOnOk)="updateUserName()"
+  >
+    <ng-container *nzModalContent>   
+      <nz-input-group [nzSuffix]="inputClearTpl" [nzPrefix]="prefixTemplateUser">
+        <input type="text" nz-input placeholder="請輸入您的昵稱" [(ngModel)]="userNameTypeIn" />
+      </nz-input-group>
+      <ng-template #prefixTemplateUser><span nz-icon nzType="user"></span></ng-template>
+      <ng-template #inputClearTpl>
+        <span
+          nz-icon
+          class="ant-input-clear-icon"
+          nzTheme="fill"
+          nzType="close-circle"
+          *ngIf="userNameTypeIn"
+          (click)="userNameTypeIn = null"
+        ></span>
+      </ng-template>
+    </ng-container>
+  </nz-modal> -->
 
   <nz-layout [hidden]="!isCollapsed" class="sub-layout">
     <nz-header class="header">
       <span class="menu" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
         (click)="isCollapsed = !isCollapsed"></span>
 
-      <div class="left-badge-container" *ngIf="NearbyPlacesService.isEscaping">
+      <div class="left-badge-container" *ngIf="isEscaping">
         <div class="left-badge" nz-icon [nzType]="'sound'" [nzTheme]="'twotone'" [nzTwotoneColor]="iconSoundColor()"
           (click)="onSwitchAlarm()"></div>
         <div class="left-badge" nz-icon [nzType]="'sync'" (click)="onRestart()"></div>

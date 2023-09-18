@@ -2,6 +2,10 @@
   min-height: 100vh;
 }
 
+.nickname {
+  text-decoration: underline;
+}
+
 .sub-layout {
   display: flex;
   flex-direction: column;

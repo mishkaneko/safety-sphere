@@ -1,5 +1,9 @@
+:host {
+  flex-grow: 1;
+}
+
 .map {
-  height: 49%;
+  height: 100%;
   border-radius: 4px;
 }
 

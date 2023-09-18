@@ -3,8 +3,8 @@ import { NearbyPlacesService } from 'src/app/@services/nearby-places.service'
 import { PositionService } from 'src/app/@services/position.service';
 import { Geolocation } from '@capacitor/geolocation';
 import { Subscription } from 'rxjs';
+import { GoogleMapService } from 'src/app/google-map.service';
 
-declare const google: any;
 
 @Component({
   selector: 'app-escape-route-map',
@@ -17,15 +17,16 @@ export class EscapeRouteMapComponent implements OnInit , OnDestroy {
   @ViewChild('locateButton') locateButton!: ElementRef;
 
   private positionService: PositionService
-  private nearbyPlacesService: NearbyPlacesService
   protected isViewInited: boolean = false
   private currentPositionSubscription?: Subscription
   private restartSubscription?: Subscription
 
   // constructor (private positionService: PositionService, private nearbyPlacesService: NearbyPlacesService) {}
-  constructor () {
+  constructor (
+  private nearbyPlacesService: NearbyPlacesService,
+  private googleMapService: GoogleMapService,
+  ) {
     this.positionService = new PositionService()
-    this.nearbyPlacesService = new NearbyPlacesService()
   }
 
   async ngOnInit() {
@@ -42,15 +43,16 @@ export class EscapeRouteMapComponent implements OnInit , OnDestroy {
     this.onPositionService()
 
     // 創建定位按鈕
-    this.createLocateButton()
+    await this.createLocateButton()
 
     // 執行地點搜索
-    if(NearbyPlacesService.isEscaping) this.nearbyPlacesService.searchNearbyPlaces()
+    if(this.nearbyPlacesService.isEscaping) this.nearbyPlacesService.searchNearbyPlaces()
   }
 
   private async initMap() {
+    let google = await this.googleMapService.googleDefer.promise
     const { coords } = await Geolocation.getCurrentPosition(), { latitude, longitude } = coords
-    Object.assign(NearbyPlacesService.userLatLng, { lat: latitude, lng: longitude })
+    NearbyPlacesService.setUserLatLng({ lat: latitude, lng: longitude })
     const mapOptions = {
       // center: this.userLatLng,
       center: { lat: latitude, lng: longitude },
@@ -63,7 +65,7 @@ export class EscapeRouteMapComponent implements OnInit , OnDestroy {
     };
     const latLng = new google.maps.LatLng(latitude, longitude);
     NearbyPlacesService.map = new google.maps.Map(this.mapDiv.nativeElement, mapOptions);
-    NearbyPlacesService.placesService = new google.maps.places.PlacesService(NearbyPlacesService.map);
+    NearbyPlacesService.placesService.resolve(new google.maps.places.PlacesService(NearbyPlacesService.map))
     // 移動地圖中心到定位位置
     NearbyPlacesService.map!.panTo(latLng);
     // 創建標記並將其移動到定位位置
@@ -80,9 +82,10 @@ export class EscapeRouteMapComponent implements OnInit , OnDestroy {
     });
   }
 
-  private updateUserMarker (newUserLatLng: { lat:number, lng:number }) {
-    if (newUserLatLng.lat === NearbyPlacesService.userLatLng.lat && newUserLatLng.lng === NearbyPlacesService.userLatLng.lng) return
-    Object.assign(NearbyPlacesService.userLatLng, newUserLatLng)
+  private async updateUserMarker (newUserLatLng: { lat:number, lng:number }) {
+   let userLatLng=await NearbyPlacesService.userLatLng.promise
+    if (newUserLatLng.lat === userLatLng.lat && newUserLatLng.lng === userLatLng.lng) return
+    NearbyPlacesService.setUserLatLng(newUserLatLng)
     if(NearbyPlacesService.userMarker) NearbyPlacesService.userMarker!.setPosition(newUserLatLng)
   }
 
@@ -95,12 +98,13 @@ export class EscapeRouteMapComponent implements OnInit , OnDestroy {
   }
 
   // 創建定位按鈕
-  private createLocateButton() {
+  private async createLocateButton() {
+   let userLatLng=await NearbyPlacesService.userLatLng.promise
     const locateButtonDiv:any = this.locateButtonContainer.nativeElement;
     const locateButton:any = this.locateButton.nativeElement;
     locateButton.addEventListener('click', () => {
       // 移動地圖中心到定位位置
-      const latLng = new google.maps.LatLng(NearbyPlacesService.userLatLng.lat, NearbyPlacesService.userLatLng.lng);
+      const latLng = new google.maps.LatLng(userLatLng.lat, userLatLng.lng);
       NearbyPlacesService.map!.panTo(latLng);
     });
     NearbyPlacesService.map!.controls[google.maps.ControlPosition.TOP_RIGHT].push(locateButtonDiv);

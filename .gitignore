@@ -1,2 +1,4 @@
 knex_sample
 demo-app
+.DS_Store
+package-lock.json

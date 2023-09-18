@@ -1,11 +1,17 @@
 import { Injectable } from '@angular/core';
-import { NativeAudio } from '@capacitor-community/native-audio'
+// import { NativeAudio } from '@capacitor-community/native-audio'
 
 @Injectable({
   providedIn: 'root'
 })
 export class AlarmService {
-  constructor() {}
+      assetPath= "/assets/sounds/police_siren.mp3"
+
+      audio?:HTMLAudioElement
+
+  constructor() {
+    this.init()
+  }
 
   _isAlarming: boolean = false
   get isAlarming () {
@@ -15,46 +21,61 @@ export class AlarmService {
     this._isAlarming=  value
   }
 
-  preload () {
-    NativeAudio.preload({
-      assetId: "alarm",
-      assetPath: "police_siren.mp3",
-      audioChannelNum: 1,
-      isUrl: false
-    });
+  async preload () {
+    let res= await fetch(this.assetPath)
+    await res.arrayBuffer()
+    // NativeAudio.preload({
+    //   assetId: "alarm",
+    //   assetPath: "/assets/sounds/police_siren.mp3",
+    //   audioChannelNum: 1,
+    //   isUrl: false
+    // });
   }
 
-  play () {
-    NativeAudio.play({
-      assetId: 'alarm',
-    });
-  }
+  // play () {
+  //   NativeAudio.play({
+  //     assetId: 'alarm',
+  //   });
+  // }
 
   loop () {
-    NativeAudio.loop({
-      assetId: 'alarm',
-    });
+    this.stop()
+    this.audio = document.createElement('audio')
+    document.body.appendChild(this.audio)
+    this.audio.src = this.assetPath
+    this.audio.loop = true 
+    this.audio.volume = 1
+    this.audio.play()
+    // NativeAudio.loop({
+    //   assetId: 'alarm',
+    // });
     this.isAlarming = true
   }
 
   stop () {
-    NativeAudio.stop({
-      assetId: 'alarm',
-    });
+    if(this.audio){
+      this.audio.pause()
+      this.audio.remove()
+      delete this.audio
+    }
+    // NativeAudio.stop({
+    //   assetId: 'alarm',
+    // });
     this.isAlarming = false
   }
 
-  unload () {
-    NativeAudio.unload({
-      assetId: 'alarm',
-    });
-  }
+  // unload () {
+  //   NativeAudio.unload({
+  //     assetId: 'alarm',
+  //   });
+  // }
 
   setVolume () {
-    NativeAudio.setVolume({
-      assetId: 'alarm',
-      volume: 1.0,
-    });
+    // NativeAudio.setVolume({
+    //   assetId: 'alarm',
+    //   volume: 1.0,
+    // });
+    // TODO set volume
   }
 
   // async isPlaying () {
@@ -62,13 +83,13 @@ export class AlarmService {
   //   return isPlaying
   // }
 
-  init () {
-    this.preload()
+ private async init () {
+    await this.preload()
     this.setVolume()
   }
 
   destroy () {
     this.stop()
-    this.unload()
+    // this.unload()
   }
 }

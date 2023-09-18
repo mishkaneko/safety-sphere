@@ -22,3 +22,11 @@ export class CreateProfileInformationDto {
   @IsString()
   emerg_address: string;
 }
+
+// export class UserDto {
+//   @IsString()
+//   name: string;
+
+//   @IsString()
+//   userUuid: string;
+// }
