@@ -1,10 +1,16 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { LoginComponent } from './pages/login/login.component'
+// import { LoginComponent } from './pages/login/login.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/escape-route' },
-  { path: 'login', component: LoginComponent },
+
+  {
+    path: 'login',
+    loadChildren: () =>
+      import('./pages/login/login.module').then((m) => m.LoginModule),
+  },
+
   {
     path: 'escape-route',
     loadChildren: () =>
@@ -18,6 +24,7 @@ const routes: Routes = [
         (m) => m.IncidentMapModule
       ),
   },
+
   {
     path: 'report-incident',
     loadChildren: () =>
@@ -25,6 +32,7 @@ const routes: Routes = [
         (m) => m.ReportIncidentModule
       ),
   },
+
   {
     path: 'report-incident-history',
     loadChildren: () =>
@@ -32,6 +40,7 @@ const routes: Routes = [
         './pages/report-incident-history/report-incident-history.module'
       ).then((m) => m.ReportIncidentHistoryModule),
   },
+
   {
     path: 'user-profile',
     loadChildren: () =>
@@ -39,6 +48,23 @@ const routes: Routes = [
         (m) => m.UserProfileModule
       ),
   },
+
+  {
+    path: 'follow',
+    loadChildren: () =>
+      import('./pages/follow/follow.module').then((m) => m.FollowModule),
+  },
+
+  {
+    path: 'ask-for-help',
+    children: [
+      {
+        path: 'aaa@gmail.com',
+        loadChildren: () =>
+        import('./pages/ask-for-help/ask-for-help.module').then((m) => m.AskForHelpModule),
+      }
+    ],
+  }
 ];
 
 @NgModule({

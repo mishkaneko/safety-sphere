@@ -6,7 +6,10 @@ import { LoginComponent } from './login.component'
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NzGridModule } from 'ng-zorro-antd/grid';
-// import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzNotificationModule } from 'ng-zorro-antd/notification';
+import { LoginRoutingModule } from './login-routing.module';
 
 @NgModule({
   declarations: [LoginComponent],
@@ -17,8 +20,11 @@ import { NzGridModule } from 'ng-zorro-antd/grid';
     NzButtonModule,
     FormsModule,
     ReactiveFormsModule,
-    NzGridModule
-    // NzCheckboxModule
+    NzGridModule,
+    NzModalModule,
+    NzCardModule,
+    NzNotificationModule,
+    LoginRoutingModule
   ],
   exports: [LoginComponent]
 })

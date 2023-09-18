@@ -2,8 +2,8 @@
 
 <nz-divider></nz-divider>
 
-<app-escape-route-list *ngIf="NearbyPlacesService.isEscaping"></app-escape-route-list>
+<app-escape-route-list *ngIf="isEscaping"></app-escape-route-list>
 
-<div class="btn-start-wrap" *ngIf="!NearbyPlacesService.isEscaping">
+<div class="btn-start-wrap" *ngIf="!isEscaping">
   <app-escape-route-start-button (onStartEscape)="onStartEscape()"></app-escape-route-start-button>
 </div>

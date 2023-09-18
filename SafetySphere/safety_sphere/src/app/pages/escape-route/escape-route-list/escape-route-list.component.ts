@@ -2,6 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NearbyPlacesService } from '../../../@services/nearby-places.service'
 import { Subscription } from 'rxjs';
 import { PositionService } from 'src/app/@services/position.service';
+import { GoogleMapService } from 'src/app/google-map.service';
+
 
 @Component({
   selector: 'app-escape-route-list',
@@ -15,7 +17,6 @@ export class EscapeRouteListComponent implements OnInit, OnDestroy {
   private currentPositionSubscription?: Subscription
   // protected nearbyPlaces: Array<google.maps.places.PlaceResult & {distance:google.maps.Distance, duration:google.maps.Duration}> = []
   protected nearbyPlaces: any[] = []
-  protected nearbyPlacesService!: NearbyPlacesService
   private placeSelectedCollection: {
     selected: boolean;
     place: google.maps.places.PlaceResult;
@@ -27,12 +28,15 @@ export class EscapeRouteListComponent implements OnInit, OnDestroy {
   private restartSubscription?: Subscription
 
   // constructor(private nearbyPlacesService: NearbyPlacesService) {}
-  constructor() {
-    this.nearbyPlacesService = new NearbyPlacesService()
+  constructor(
+  private nearbyPlacesService: NearbyPlacesService,
+  private googleMapService: GoogleMapService
+  ) {
   }
 
   ngOnInit() {
     this.nearbyPlacesSubscription = NearbyPlacesService.nearbyPlaces$.subscribe(async () => {
+      let google = await this.googleMapService.googleDefer.promise
       await this.rankDurationToPlace(NearbyPlacesService.places)
       this.nearbyPlaces.length = 5
       this.nearbyPlaces.map(placeCollection => {
@@ -47,7 +51,7 @@ export class EscapeRouteListComponent implements OnInit, OnDestroy {
       })
       const destinationLatLng = { lat: this.nearbyPlaces[0].place.geometry.location.lat(), lng: this.nearbyPlaces[0].place.geometry.location.lng() }   
       const destination = new google.maps.LatLng(destinationLatLng.lat, destinationLatLng.lng)
-      this.updatePlaceCollection(this.nearbyPlaces[0])
+      await this.updatePlaceCollection(this.nearbyPlaces[0])
       Object.assign(NearbyPlacesService.destination, { place_id: this.nearbyPlaces[0].place_id, lat: destinationLatLng.lat, lng: destinationLatLng.lng })
       this.nearbyPlacesService.calculateRoute(destination)
       this.initLoading = false
@@ -70,19 +74,21 @@ export class EscapeRouteListComponent implements OnInit, OnDestroy {
     return place_id === this.placeSelectedCollection?.place.place_id
   }
 
-  protected switchPlace (placeCollection: any) {
+  protected async switchPlace (placeCollection: any) {
+    let google = await this.googleMapService.googleDefer.promise
     if (placeCollection.place.place_id === this.placeSelectedCollection?.place.place_id) return
     NearbyPlacesService.escapeRoute.route = null
     for (const polyline of NearbyPlacesService.escapeRoute.polyLines) {
       polyline.setMap(null);
     }
-    this.updatePlaceCollection(placeCollection)
+    await this.updatePlaceCollection(placeCollection)
     this.nearbyPlacesService.calculateRoute(
       new google.maps.LatLng(placeCollection.place.geometry.location.lat(), placeCollection.place.geometry.location.lng())
     )
   }
 
-  private updatePlaceCollection (placeCollection: any) {
+  private async updatePlaceCollection (placeCollection: any) {
+    let google = await this.googleMapService.googleDefer.promise
     if (this.placeSelectedCollection) {
       this.placeSelectedCollection!.selected = false
       // this.placeSelectedCollection?.infoWindow.close()
@@ -98,23 +104,27 @@ export class EscapeRouteListComponent implements OnInit, OnDestroy {
       scaledSize: new google.maps.Size(40, 40)
     })
 
+    let userLatLng = await NearbyPlacesService.userLatLng.promise
     NearbyPlacesService.map!.panTo(
-      new google.maps.LatLng(NearbyPlacesService.userLatLng.lat as number, NearbyPlacesService.userLatLng.lng as number)
+      new google.maps.LatLng(userLatLng.lat , userLatLng.lng )
     )
   }
 
   private async rankDurationToPlace (places: any[]) {
+    let google = await this.googleMapService.googleDefer.promise
+    let userLatLng = await NearbyPlacesService.userLatLng.promise
     const nearbyPlaces: any[] = []
     // await Promise.all(NearbyPlacesService.places.map(async placeCollection => {
     await Promise.all(places.map(async placeCollection => {
       const request = {
-        origin: new google.maps.LatLng(NearbyPlacesService.userLatLng.lat as number, NearbyPlacesService.userLatLng.lng as number),
+        origin: new google.maps.LatLng(userLatLng.lat, userLatLng.lng),
         destination: new google.maps.LatLng(
           placeCollection.place.geometry?.location?.lat() as number, placeCollection.place.geometry?.location?.lng() as number
         ),
         travelMode: google.maps.TravelMode.WALKING
       };
-      const directionsResult = await this.nearbyPlacesService.directionsService.route(request)
+      let directionsService = await this.nearbyPlacesService.directionsServicePromise
+      const directionsResult = await directionsService.route(request)
       const { distance, duration } = directionsResult.routes[0].legs[0]
       // this.nearbyPlaces.push(Object.assign(placeCollection, { distance , duration}))
       nearbyPlaces.push(Object.assign(placeCollection, { distance , duration}))

@@ -4,14 +4,16 @@ import { PositionService } from 'src/app/@services/position.service';
 import { Geolocation } from '@capacitor/geolocation';
 import { Subscription } from 'rxjs';
 import { GoogleMapService } from 'src/app/google-map.service';
+import { SocketIoService } from 'src/app/@services/socket-io.service';
 
 
 @Component({
-  selector: 'app-escape-route-map',
-  templateUrl: './escape-route-map.component.html',
-  styleUrls: ['./escape-route-map.component.scss']
+  selector: 'app-ask-for-help',
+  templateUrl: './ask-for-help.component.html',
+  styleUrls: ['./ask-for-help.component.scss']
 })
-export class EscapeRouteMapComponent implements OnInit , OnDestroy {
+
+export class AskForHelpComponent implements OnInit , OnDestroy {
   @ViewChild('mapDiv') mapDiv!: ElementRef;
   @ViewChild('locateButtonContainer') locateButtonContainer!: ElementRef;
   @ViewChild('locateButton') locateButton!: ElementRef;
@@ -23,8 +25,9 @@ export class EscapeRouteMapComponent implements OnInit , OnDestroy {
 
   // constructor (private positionService: PositionService, private nearbyPlacesService: NearbyPlacesService) {}
   constructor (
-  private nearbyPlacesService: NearbyPlacesService,
-  private googleMapService: GoogleMapService,
+    private nearbyPlacesService: NearbyPlacesService,
+    private googleMapService: GoogleMapService,
+    private socketIoService: SocketIoService
   ) {
     this.positionService = new PositionService()
   }
@@ -35,6 +38,8 @@ export class EscapeRouteMapComponent implements OnInit , OnDestroy {
     this.restartSubscription = NearbyPlacesService.restart$.subscribe(async () => {
       await this.onStart()
     })
+
+    this.socketIoService.sendMessage('addCart', 'Hello Socket.io!')
   }
 
   private async onStart() {
