@@ -12,6 +12,8 @@ import {
   NzNotificationPlacement,
   NzNotificationService,
 } from 'ng-zorro-antd/notification';
+import { Router } from '@angular/router';
+import { Preferences } from '@capacitor/preferences';
 
 @Component({
   selector: 'app-report-incident',
@@ -31,7 +33,8 @@ export class ReportIncidentComponent {
   constructor(
     private fb: UntypedFormBuilder,
     private apiService: ApiService,
-    private notification: NzNotificationService
+    private notification: NzNotificationService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -46,10 +49,19 @@ export class ReportIncidentComponent {
     });
   }
 
-  onSubmit() {
+  async onSubmit() {
     let formData = new FormData();
 
-    console.log(this.validateForm.get('datePicker')!.value);
+    // Get user_uuid
+    const { value } = await Preferences.get({ key: 'user_uuid' });
+    if (value !== null) {
+      formData.set('user_uuid', value);
+    } else {
+      this.notification.error('請先登入', '', {
+        nzPlacement: 'top',
+      });
+      return;
+    }
 
     formData.set('incidentType', this.validateForm.get('incidentType')!.value);
     formData.set(
@@ -61,13 +73,10 @@ export class ReportIncidentComponent {
       this.validateForm.get('timePicker')!.value.toISOString()
     );
     formData.set('location', this.googleSearchComponent.location);
-
     const coordinates = this.googleSearchComponent.coordinates;
     formData.set('lat', coordinates.lat!.toString());
     formData.set('lng', coordinates.lng!.toString());
-
     formData.set('description', this.validateForm.get('description')!.value);
-
     for (let image of this.incidentPhotoComponent.images) {
       formData.append('images', image.file);
     }
@@ -79,10 +88,7 @@ export class ReportIncidentComponent {
       next: (response) => {
         console.log('Success:', response);
 
-        // TODO Clear photo area
-        // Clear form
-        this.validateForm.reset();
-        this.googleSearchComponent.clearSearchInput();
+        this.router.navigate(['/report-incident-history']);
 
         // Display notification on success
         this.notification.success('成功遞交報告', '', {

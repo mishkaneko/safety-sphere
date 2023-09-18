@@ -6,6 +6,7 @@ import {
   Get,
   Param,
   Put,
+  Query,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
@@ -19,11 +20,13 @@ export class ReportIncidentHistoryController {
     private reportIncidentHistoryService: ReportIncidentHistoryService,
   ) {}
   @Get('report-record')
-  getReportRecord() {
-    return this.reportIncidentHistoryService.getReportRecord();
+  getReportRecord(@Query('user_uuid') userUuid: string) {
+    return this.reportIncidentHistoryService.getReportRecord(userUuid);
   }
   @Get('edit-incident/:id')
   async getSpecificReportRecord(@Param('id') id: number) {
+    console.log('id at controller: ', id);
+
     const reportRecord =
       await this.reportIncidentHistoryService.getSpecificReportRecord(id);
     console.log('reportRecord: ', reportRecord);

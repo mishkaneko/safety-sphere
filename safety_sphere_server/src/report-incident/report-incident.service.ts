@@ -10,10 +10,16 @@ export class ReportIncidentService {
     const transformedDto = this.transformData(dto);
     console.log('transformedDto: ', transformedDto);
 
+    let user_id: any = await knex('user')
+      .select('id')
+      .from('user')
+      .where('user_uuid', dto.user_uuid);
+
+    console.log(user_id);
+
     const [userReportId] = await knex('user_report')
       .insert({
-        // change user id
-        user_id: '1',
+        user_id: user_id[0].id,
         incident_id: dto.incidentType,
         date: dto.date,
         time: dto.time,
