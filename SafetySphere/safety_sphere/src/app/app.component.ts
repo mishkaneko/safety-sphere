@@ -10,11 +10,22 @@ import { HistoryService } from 'src/app/@services/history.service';
 import { ReportIncidentService } from './@services/report-incident.service';
 import { SocketIoService } from './@services/socket-io.service';
 
+interface broadcastData {
+  askingHelp: boolean,
+  email: string,
+  mapInform: {
+    place: { selected: boolean, place: any, marker: any, infoWindow: any },
+    escapeRoute: { route: any, polyLines: any[] },
+    userLatLng: { lat:number , lng:number }
+  }
+}
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
+
 export class AppComponent implements OnInit {
   protected isCollapsed = true;
   // protected userEmail!: string
@@ -24,6 +35,7 @@ export class AppComponent implements OnInit {
   protected historyService = HistoryService;
   protected reportIncidentService = ReportIncidentService;
   protected incidentMapService = IncidentMapService;
+  protected userAskingHelp: string[] = []
 
   constructor(
     private alarmService: AlarmService,
@@ -33,13 +45,7 @@ export class AppComponent implements OnInit {
   ){}
 
   ngOnInit() {
-    this.socketIoService.getMessage('broadcastTest').subscribe({
-      next: (response: any) => {
-        console.log('broadcastTest response')
-        console.log(response)
-      },
-      error: error => console.error(error)
-    })
+    this.onBroadcast()
   }
 
   get isEscaping() {
@@ -85,6 +91,21 @@ export class AppComponent implements OnInit {
     return this.alarmService.isAlarming
       ? this.alarmService.stop()
       : this.alarmService.loop();
+  }
+
+  private onBroadcast () {
+    this.socketIoService.getBroadcast$.subscribe({
+      next: (props: broadcastData) => {
+        if (this.socketIoService.askingHelp) {
+          const index = this.userAskingHelp.indexOf(props.email)
+          this.userAskingHelp.splice(index, 1)
+        } else if (!this.userAskingHelp.includes(props.email)) {
+          this.userAskingHelp.push(props.email)
+        }
+      },
+      error: error => console.error(error),
+      complete: () => {}
+    })
   }
 
   // private async autoLogin () {

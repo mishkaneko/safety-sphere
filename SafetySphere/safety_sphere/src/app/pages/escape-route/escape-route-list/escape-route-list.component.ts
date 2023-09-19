@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Pipe } from '@angular/core';
 import { NearbyPlacesService } from '../../../@services/nearby-places.service'
 import { Subscription } from 'rxjs';
 import { PositionService } from 'src/app/@services/position.service';
@@ -30,9 +30,8 @@ export class EscapeRouteListComponent implements OnInit, OnDestroy {
   // constructor(private nearbyPlacesService: NearbyPlacesService) {}
   constructor(
   private nearbyPlacesService: NearbyPlacesService,
-  private googleMapService: GoogleMapService
-  ) {
-  }
+  private googleMapService: GoogleMapService,
+  ) {}
 
   ngOnInit() {
     this.nearbyPlacesSubscription = NearbyPlacesService.nearbyPlaces$.subscribe(async () => {

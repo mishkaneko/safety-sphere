@@ -1,3 +1,4 @@
+import { AppStatusService } from 'src/app/@services/app-status.service';
 import { ApiService } from 'src/app/@services/api.service';
 import { Component, ViewChild } from '@angular/core';
 import {
@@ -34,7 +35,8 @@ export class ReportIncidentComponent {
     private fb: UntypedFormBuilder,
     private apiService: ApiService,
     private notification: NzNotificationService,
-    private router: Router
+    private router: Router,
+    private appStatusService:AppStatusService
   ) {}
 
   ngOnInit(): void {
@@ -53,9 +55,14 @@ export class ReportIncidentComponent {
     let formData = new FormData();
 
     // Get user_uuid
-    const { value } = await Preferences.get({ key: 'user_uuid' });
-    if (value !== null) {
-      formData.set('user_uuid', value);
+    // const { value } = await Preferences.get({key: "user_uuid"});
+    let uuid: any = this.appStatusService.userUuid
+
+    console.log("uuid: ", uuid);
+    
+    
+    if (uuid !== null) {
+      formData.set('user_uuid', uuid);
     } else {
       this.notification.error('請先登入', '', {
         nzPlacement: 'top',

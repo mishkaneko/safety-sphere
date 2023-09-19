@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     private notification: NzNotificationService,
     private router: Router,
     private appStatusService: AppStatusService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.validateForm = this.fb.group({
@@ -46,14 +46,14 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.onCountdownForGettingVerificationCode()
     // this.apiService.post({ email: this.emailInput }, '/login/create-verification-code').subscribe({
     this.apiService.post({ email: this.validateForm.value.email }, '/login/create-verification-code').subscribe({
-      next: async (response:any) => {
+      next: async (response: any) => {
         verificationCode = response.verificationCode as string
         await Preferences.set({ key: 'verificationCode', value: verificationCode, });
       },
       error: error => {
         console.error(error)
       }
-    })    
+    })
   }
 
   // async retrieveUserUuid () {
@@ -61,7 +61,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   //   return value
   // }
 
-  onCountdownForGettingVerificationCode () {
+  onCountdownForGettingVerificationCode() {
     this.countdown = 180
     const count = setInterval(async () => {
       this.countdown -= 1
@@ -72,7 +72,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     }, 1000)
   }
 
-  async verifyVerificationCode () {
+  async verifyVerificationCode() {
     const { value } = await Preferences.get({ key: 'verificationCode' });
     return value ? value === this.validateForm.value.verificationCode : value
   }
@@ -153,14 +153,14 @@ export class LoginComponent implements OnInit, OnDestroy {
   //   })
   // }
 
-  onApiVerifyEmailExist () {
-    const data = { email: this.validateForm.value.email }
+  onApiVerifyEmailExist() {
+    let email = this.validateForm.value.email
+    const data = { email }
     this.apiService.post(data, '/login/verifyEmailExist').subscribe({
-      next: async (response:any) => {
+      next: async (response: any) => {
         if (!response.doesEmailExist) return this.onRegisterModal()
-        await Preferences.set({ key: 'user_uuid', value: response.userUuid })
-        await Preferences.set({ key: 'email', value: this.validateForm.value.email })
-        this.appStatusService.onLogin()
+        let uuid = response.userUuid
+        this.appStatusService.onLogin({ email, uuid })
         this.createNotification({
           type: 'success',
           title: '登入成功！',
@@ -179,13 +179,13 @@ export class LoginComponent implements OnInit, OnDestroy {
     })
   }
 
-  onApiRegister () {
-    const data = { email: this.validateForm.value.email }
+  onApiRegister() {
+    let email = this.validateForm.value.email
+    const data = { email }
     this.apiService.post(data, '/login/register').subscribe({
-      next: async (response:any) => {
-        await Preferences.set({ key: 'user_uuid', value: response.userUuid });
-        await Preferences.set({ key: 'email', value: this.validateForm.value.email });
-        this.appStatusService.onLogin()
+      next: async (response: any) => {
+        let uuid = response.userUuid
+        this.appStatusService.onLogin({ email, uuid })
         this.createNotification({
           type: 'success',
           title: '註冊成功！',
@@ -206,7 +206,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   createNotification(props: { type: string, title: string, message: string }) {
     const { type, title, message } = props
-    this.notification.create(type, title, message );
+    this.notification.create(type, title, message);
   }
 
   async ngOnDestroy() {

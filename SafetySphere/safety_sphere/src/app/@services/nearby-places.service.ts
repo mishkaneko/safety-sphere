@@ -2,12 +2,15 @@ import { createDefer } from '@beenotung/tslib/async/defer';
 import { GoogleMapService } from './../google-map.service';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { SocketIoService } from './socket-io.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NearbyPlacesService {
-  constructor(private googleMapService:GoogleMapService) { }
+  constructor(private googleMapService:GoogleMapService, private socketIoService: SocketIoService) { }
+
+  keepBroadcast!: any
 
   // static isEscaping: boolean = false
   _isEscaping: boolean = false
@@ -16,6 +19,13 @@ export class NearbyPlacesService {
   }
   set isEscaping (value:boolean) {
     this._isEscaping = value
+    this.socketIoService.askingHelp = value
+    if (value) {
+      setInterval(() => {
+        console.log('this.socketIoService.broadcastForAskingForHelp')
+        // this.socketIoService.broadcastForAskingForHelp()
+      }, 5000)
+    }
   }
 
   static map: google.maps.Map | null

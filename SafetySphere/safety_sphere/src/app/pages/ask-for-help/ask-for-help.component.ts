@@ -23,9 +23,7 @@ export class AskForHelpComponent implements OnInit , OnDestroy {
   private currentPositionSubscription?: Subscription
   private restartSubscription?: Subscription
 
-  // constructor (private positionService: PositionService, private nearbyPlacesService: NearbyPlacesService) {}
   constructor (
-    private nearbyPlacesService: NearbyPlacesService,
     private googleMapService: GoogleMapService,
     private socketIoService: SocketIoService
   ) {
@@ -39,7 +37,8 @@ export class AskForHelpComponent implements OnInit , OnDestroy {
       await this.onStart()
     })
 
-    this.socketIoService.sendMessage('hello', 'Hello Socket.io!')
+    console.log('this.socketIoService.mapInformForUserAskingHelp')
+    console.log(this.socketIoService.mapInformForUserAskingHelp)
   }
 
   private async onStart() {
@@ -49,9 +48,6 @@ export class AskForHelpComponent implements OnInit , OnDestroy {
 
     // 創建定位按鈕
     await this.createLocateButton()
-
-    // 執行地點搜索
-    // if(this.nearbyPlacesService.isEscaping) this.nearbyPlacesService.searchNearbyPlaces()
   }
 
   private async initMap() {
